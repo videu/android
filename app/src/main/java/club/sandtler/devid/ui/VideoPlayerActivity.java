@@ -1,4 +1,4 @@
-package club.sandtler.devid;
+package club.sandtler.devid.ui;
 
 /*
  * Copyright (c) 2019 Felix Kopp <sandtler@sandtler.club>
@@ -28,6 +28,8 @@ import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import club.sandtler.devid.R;
+
 /**
  * Activity for playing videos.
  *
@@ -43,7 +45,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * in Intents starting this activity.
      */
     public static final String EXTRA_VIDEO_ID =
-            "club.sandtler.devid.VideoPlayerActivity.VIDEO_ID";
+            "club.sandtler.devid.ui.VideoPlayerActivity.VIDEO_ID";
 
     private MediaController mediaController;
     private VideoView videoView;
