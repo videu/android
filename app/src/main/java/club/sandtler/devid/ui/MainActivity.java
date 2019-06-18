@@ -1,5 +1,3 @@
-package club.sandtler.devid.ui;
-
 /*
  * Copyright (c) 2019 Felix Kopp <sandtler@sandtler.club>
  *
@@ -16,6 +14,8 @@ package club.sandtler.devid.ui;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+package club.sandtler.devid.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

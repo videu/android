@@ -1,5 +1,3 @@
-package club.sandtler.devid.lib;
-
 /*
  * Copyright (c) 2019 Felix Kopp <sandtler@sandtler.club>
  *
@@ -16,6 +14,8 @@ package club.sandtler.devid.lib;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+package club.sandtler.devid.lib;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -35,8 +35,6 @@ import club.sandtler.devid.ui.LoginActivity;
  * The account authenticator for DEvid accounts.
  */
 public final class AccountAuthenticator extends AbstractAccountAuthenticator {
-
-    public static final String SP_AUTH_TOKEN = "auth_token";
 
     private Context mContext;
 

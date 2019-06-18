@@ -1,5 +1,3 @@
-package club.sandtler.devid.ui;
-
 /*
  * Copyright (c) 2019 Felix Kopp <sandtler@sandtler.club>
  *
@@ -16,6 +14,8 @@ package club.sandtler.devid.ui;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+package club.sandtler.devid.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -47,15 +47,15 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public static final String EXTRA_VIDEO_ID =
             "club.sandtler.devid.ui.VideoPlayerActivity.VIDEO_ID";
 
-    private MediaController mediaController;
-    private VideoView videoView;
+    private MediaController mMediaController;
+    private VideoView mVideoView;
 
     /** The current video playback position in milliseconds. */
-    private int currentPosition = 0;
+    private int mCurrentPosition = 0;
     /** The current video id. */
-    private String videoId;
+    private String mVideoId;
 
-    private boolean isFullscreen = false;
+    private boolean mIsFullscreen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +63,19 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_video_player);
         int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE)
-            this.isFullscreen = true;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            this.mIsFullscreen = true;
+        }
 
         if (savedInstanceState != null) {
-            this.currentPosition = savedInstanceState
+            this.mCurrentPosition = savedInstanceState
                     .getInt(VideoPlayerActivity.BUNDLE_VIDEO_PROGRESS);
         }
 
         Intent intent = getIntent();
-        if (intent != null)
+        if (intent != null) {
             handleIntent(intent);
+        }
     }
 
     @Override
@@ -81,8 +83,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
         super.onStart();
 
         this.initPlayer();
-        if (this.videoId != null)
-            playVideo(this.videoId);
+        if (this.mVideoId != null) {
+            playVideo(this.mVideoId);
+        }
     }
 
     @Override
@@ -94,17 +97,18 @@ public class VideoPlayerActivity extends AppCompatActivity {
          * onSaveInstanceState() callback, we will therefore need to
          * save the video progress here.
          */
-        this.currentPosition = this.videoView.getCurrentPosition();
+        this.mCurrentPosition = this.mVideoView.getCurrentPosition();
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
-            this.videoView.pause();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            this.mVideoView.pause();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        this.videoView.stopPlayback();
+        this.mVideoView.stopPlayback();
     }
 
     @Override
@@ -113,7 +117,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         saveState.putInt(
                 VideoPlayerActivity.BUNDLE_VIDEO_PROGRESS,
-                this.currentPosition
+                this.mCurrentPosition
         );
     }
 
@@ -121,13 +125,15 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        if (!this.isFullscreen)
+        if (!this.mIsFullscreen) {
             return;
+        }
 
-        if (hasFocus)
+        if (hasFocus) {
             hideSystemUI();
-        else
+        } else {
             showSystemUI();
+        }
     }
 
     /**
@@ -142,7 +148,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 "https://cdn.devid.sandtler.club/video/%s",
                 videoId
         );
-        this.videoView.setVideoURI(Uri.parse(videoUri));
+        this.mVideoView.setVideoURI(Uri.parse(videoUri));
     }
 
     /**
@@ -152,8 +158,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
      */
     private void handleIntent(Intent intent) {
         if (intent.hasExtra(VideoPlayerActivity.EXTRA_VIDEO_ID)) {
-            this.videoId =
-                    intent.getStringExtra(VideoPlayerActivity.EXTRA_VIDEO_ID);
+            this.mVideoId = intent.getStringExtra(VideoPlayerActivity.EXTRA_VIDEO_ID);
         }
     }
 
@@ -162,25 +167,23 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * and registering all required listeners.
      */
     private void initPlayer() {
-        this.videoView = findViewById(R.id.view_video_player);
-        this.mediaController = new MediaController(this);
-        this.mediaController.setMediaPlayer(this.videoView);
-        this.videoView.setMediaController(this.mediaController);
+        this.mVideoView = findViewById(R.id.view_video_player);
+        this.mMediaController = new MediaController(this);
+        this.mMediaController.setMediaPlayer(this.mVideoView);
+        this.mVideoView.setMediaController(this.mMediaController);
 
-        this.videoView.setOnPreparedListener(
+        this.mVideoView.setOnPreparedListener(
                 new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
-                        int currentPosition =
-                                VideoPlayerActivity.this.currentPosition;
-                        final VideoView videoView = VideoPlayerActivity.this
-                                .findViewById(R.id.view_video_player);
+                        final VideoView videoView = findViewById(R.id.view_video_player);
 
                         // If the activity has been destroyed while playing,
                         // set it back to where it was previously.
-                        if (currentPosition <= 0)
-                            currentPosition = 1;
-                        videoView.seekTo(currentPosition);
+                        if (mCurrentPosition <= 0) {
+                            mCurrentPosition = 1;
+                        }
+                        videoView.seekTo(mCurrentPosition);
 
                         videoView.requestFocus();
                         videoView.start();

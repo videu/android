@@ -1,5 +1,3 @@
-package club.sandtler.devid.lib;
-
 /*
  * Copyright (c) 2019 Felix Kopp <sandtler@sandtler.club>
  *
@@ -16,6 +14,8 @@ package club.sandtler.devid.lib;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+package club.sandtler.devid.lib;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,7 +59,7 @@ public final class NetworkUtil {
     private static final NetworkUtil defaultInstance = new NetworkUtil(null);
 
     /** The authentication token. */
-    private final String authToken;
+    private final String mAuthToken;
 
     /**
      * Return the default (unauthenticated) instance.
@@ -84,10 +84,11 @@ public final class NetworkUtil {
          * However, this is definitively something that CAN NOT,
          * UNDER ALL CIRCUMSTANCES, get fucked up.  I'm paranoid.
          */
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             disableAllSSLCertificateChecks();
+        }
 
-        this.authToken = authToken;
+        this.mAuthToken = authToken;
     }
 
     /**
@@ -162,8 +163,9 @@ public final class NetworkUtil {
         URL url = new URL(Constants.BACKEND_ROOT + path);
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 
-        if (this.authToken != null)
-            conn.setRequestProperty("Authentication", "Bearer " + this.authToken);
+        if (this.mAuthToken != null) {
+            conn.setRequestProperty("Authentication", "Bearer " + this.mAuthToken);
+        }
 
         conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
         return conn;
@@ -174,7 +176,8 @@ public final class NetworkUtil {
      *
      * @param conn The connection.
      * @return The JSON response, or null if it was empty.
-     * @throws IOException If the
+     * @throws IOException If an error was encountered while trying to read the
+     *                     response body.
      * @throws JSONException If the response body did not contain valid JSON.
      */
     private static JSONObject readResponse(HttpsURLConnection conn)
@@ -185,15 +188,17 @@ public final class NetworkUtil {
 
         while (true) {
             String line = reader.readLine();
-            if (line == null)
+            if (line == null) {
                 break;
+            }
             responseBuf.append(line);
         }
         reader.close();
         in.close();
 
-        if (responseBuf.length() > 0)
+        if (responseBuf.length() > 0) {
             return new JSONObject(responseBuf.toString());
+        }
 
         return null;
     }
@@ -206,8 +211,9 @@ public final class NetworkUtil {
      */
     private static void disableAllSSLCertificateChecks() {
         // Do. not. remove. this.
-        if (!BuildConfig.DEBUG)
+        if (!BuildConfig.DEBUG) {
             return;
+        }
 
         TrustManager[] trustAllCerts = new TrustManager[] {
                 new X509TrustManager() {

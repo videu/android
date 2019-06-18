@@ -1,5 +1,3 @@
-package club.sandtler.devid.ui;
-
 /*
  * Copyright (c) 2019 Felix Kopp <sandtler@sandtler.club>
  *
@@ -16,6 +14,8 @@ package club.sandtler.devid.ui;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+package club.sandtler.devid.ui;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
@@ -86,8 +86,9 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         this.mAccountMgr = AccountManager.get(this);
 
         Intent intent = getIntent();
-        if (intent.hasExtra(LoginActivity.EXTRA_ACCOUNT_NAME))
+        if (intent.hasExtra(LoginActivity.EXTRA_ACCOUNT_NAME)) {
             this.mUserNameEditText.setText(intent.getStringExtra(LoginActivity.EXTRA_ACCOUNT_NAME));
+        }
 
         // Update the login button if both username and password input
         // are filled out.
@@ -117,8 +118,9 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE)
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
                             handleLogin(mLoginButton);
+                        }
 
                         return false;
                     }
@@ -217,10 +219,11 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
         @Override
         public void onPostExecute(final Result<LoggedInUser> result) {
-            if (result instanceof Result.Success)
+            if (result instanceof Result.Success) {
                 onAuthSuccess(((Result.Success<LoggedInUser>) result).getData());
-            else if (result instanceof Result.Error)
+            } else if (result instanceof Result.Error) {
                 onAuthError(((Result.Error) result).getError());
+            }
         }
 
         @Override
