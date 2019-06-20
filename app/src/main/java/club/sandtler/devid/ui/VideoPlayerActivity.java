@@ -22,13 +22,15 @@ import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import club.sandtler.devid.R;
+import club.sandtler.devid.lib.Constants;
 
 /**
  * Activity for playing videos.
