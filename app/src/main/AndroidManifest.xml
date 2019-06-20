@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="club.sandtler.devid">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -44,7 +43,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login" />
 
-        <activity android:name=".ui.VideoPlayerActivity" />
+        <activity android:name=".ui.VideoPlayerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="devid.sandtler.club"
+                    android:pathPrefix="/watch" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".ui.MainActivity">
             <intent-filter>

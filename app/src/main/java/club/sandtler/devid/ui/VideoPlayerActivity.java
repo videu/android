@@ -25,9 +25,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.List;
 
 import club.sandtler.devid.R;
 import club.sandtler.devid.lib.Constants;
@@ -40,6 +43,7 @@ import club.sandtler.devid.lib.Constants;
  */
 public class VideoPlayerActivity extends AppCompatActivity {
 
+    /** Bundle key for storing the video progress in seconds. */
     private static final String BUNDLE_VIDEO_PROGRESS = "video_progress";
 
     /**
@@ -74,10 +78,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     .getInt(VideoPlayerActivity.BUNDLE_VIDEO_PROGRESS);
         }
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            handleIntent(intent);
-        }
+        handleIntent(getIntent());
     }
 
     @Override
@@ -88,6 +89,14 @@ public class VideoPlayerActivity extends AppCompatActivity {
         if (this.mVideoId != null) {
             playVideo(this.mVideoId);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // Can be received when the activity is paused (because the user
+        // is in another app, for example) and clicked on an app link.
+        super.onNewIntent(intent);
+        handleIntent(intent);
     }
 
     @Override
@@ -147,7 +156,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         String videoUri;
 
         videoUri = String.format(
-                "https://cdn.devid.sandtler.club/video/%s",
+                Constants.CDN_ROOT + "/video/%s",
                 videoId
         );
         this.mVideoView.setVideoURI(Uri.parse(videoUri));
@@ -161,6 +170,22 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         if (intent.hasExtra(VideoPlayerActivity.EXTRA_VIDEO_ID)) {
             this.mVideoId = intent.getStringExtra(VideoPlayerActivity.EXTRA_VIDEO_ID);
+        } else {
+            // Check if the activity has been launched by the user clicking
+            // on a link to https://devid.sandtler.club/watch/<videoId>
+            String appLinkAction = intent.getAction();
+            Uri appLinkData = intent.getData();
+
+            if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
+                List<String> segments = appLinkData.getPathSegments();
+                try {
+                    this.mVideoId = segments.get(1);
+                } catch (IndexOutOfBoundsException e) {
+                    Toast.makeText(this, "Invalid video link", Toast.LENGTH_LONG)
+                            .show();
+                    finish();
+                }
+            }
         }
     }
 
