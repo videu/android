@@ -17,9 +17,13 @@
 
 package club.sandtler.devid.data;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import club.sandtler.devid.data.model.User;
 import club.sandtler.devid.lib.NetworkUtil;
@@ -35,6 +39,8 @@ public class UserDataSource {
     private static final String BY_USER_NAME_PATH = "/user/byUserName/%s";
     /** The HTTP URL string for retrieving a user by their unique id. */
     private static final String BY_ID_PATH = "/user/byId/%s";
+    /** The HTTP URL string for retrieving a profile picture from the CDN. */
+    private static final String PP_PATH = "/pp/%s";
 
     /** The network utility instance for performing the POST request. */
     private final NetworkUtil mNetworkUtil;
@@ -76,6 +82,28 @@ public class UserDataSource {
 
         final String path = String.format(UserDataSource.BY_USER_NAME_PATH, userName);
         return retrieveByPath(path);
+    }
+
+    /**
+     * Download the user's profile picture, if present.
+     *
+     * @param userId The user id.
+     * @return The user's profile picture.
+     */
+    public Result<Bitmap> getPP(@NonNull String userId) {
+        if (!isIdValid(userId)) {
+            return new Result.Error(new IllegalArgumentException("Invalid user id format"));
+        }
+
+        Bitmap bm;
+
+        try {
+            bm = this.mNetworkUtil.getBitmap(String.format(PP_PATH, userId));
+        } catch (IOException e) {
+            return new Result.Error(e);
+        }
+
+        return new Result.Success<>(bm);
     }
 
     /**

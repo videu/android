@@ -17,6 +17,8 @@
 
 package club.sandtler.devid.data;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 
 import java.util.HashMap;
@@ -105,6 +107,18 @@ public class UserRepository {
         }
 
         return result;
+    }
+
+    /**
+     * Retrieve a user's profile picture.
+     *
+     * @param userId The user id.
+     * @return The result.
+     */
+    @NonNull
+    public Result<Bitmap> getPP(String userId) {
+        // TODO: Add file cache support
+        return this.mDataSource.getPP(userId);
     }
 
     /**

@@ -17,6 +17,9 @@
 
 package club.sandtler.devid.lib;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -147,6 +150,20 @@ public final class NetworkUtil {
         }
 
         return response;
+    }
+
+    /**
+     * Perform a HTTP GET request to the CDN and
+     * parse the response body as a Bitmap.
+     *
+     * @param path The absolute URL path.
+     * @return The parsed Bitmap.
+     * @throws IOException If there was a network error,
+     *                     or the response did not contain an image.
+     */
+    public Bitmap getBitmap(@NonNull String path) throws IOException {
+        InputStream in = new URL(Constants.CDN_ROOT + path).openStream();
+        return BitmapFactory.decodeStream(in);
     }
 
     /**

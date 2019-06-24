@@ -17,6 +17,7 @@
 
 package club.sandtler.devid.ui.user;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
@@ -38,6 +39,8 @@ public class UserViewModel extends ViewModel {
 
     /** The user data that is to be exposed to the activity. */
     private MutableLiveData<Result<User>> mUser;
+    /** The user's profile picture, decoded as a bitmap. */
+    private MutableLiveData<Result<Bitmap>> mPP;
 
     /**
      * Create a new View model.
@@ -80,6 +83,15 @@ public class UserViewModel extends ViewModel {
         return this.mUser;
     }
 
+    public LiveData<Result<Bitmap>> getPP(String userId) {
+        if (this.mPP == null) {
+            this.mPP = new MutableLiveData<>();
+            new PPLoadTask().execute(userId);
+        }
+
+        return this.mPP;
+    }
+
     /**
      * Asynchronous task class for retrieving the
      * requested user data from the repository.
@@ -114,6 +126,24 @@ public class UserViewModel extends ViewModel {
         @Override
         protected void onPostExecute(Result<User> result) {
             mUser.setValue(result);
+        }
+
+    }
+
+    private class PPLoadTask extends AsyncTask<String, Void, Result<Bitmap>> {
+
+        @Override
+        protected Result<Bitmap> doInBackground(String... args) {
+            if (args.length < 1) {
+                return new Result.Error(new IllegalArgumentException());
+            }
+
+            return mRepository.getPP(args[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Result<Bitmap> result) {
+            mPP.setValue(result);
         }
 
     }

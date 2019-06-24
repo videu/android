@@ -38,6 +38,8 @@ public final class Constants {
     /** The root URL for all CDN requests (videos/profile pictures etc). */
     public static final String CDN_ROOT = "https://cdn.devid.sandtler.club";
 
+    public static final String PP_PATH = "/pp/%s";
+
     private Constants() {
     }
 

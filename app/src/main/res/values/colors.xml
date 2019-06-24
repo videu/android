@@ -24,5 +24,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     <color name="app_bar_icon_color">#FFFFFF</color>
 
-    <color name="font_hint">#00000070</color>
+    <color name="font_hint">#000000A0</color>
 </resources>

@@ -67,7 +67,6 @@ public class UserTabsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
         switch (position) {
             case 0:
                 return UserOverviewFragment.newInstance(this.mUserSpec);
