@@ -30,14 +30,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".DEvidApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name="club.sandtler.devid.DEvidApp"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:theme="@style/Theme.DEvid">
+
+        <!-- Action bar is handled by the activity -->
+        <activity
+            android:name=".ui.UserViewActivity"
+            android:label="@string/title_activity_user_view"
+            android:theme="@style/Theme.DEvid.NoActionBar" />
 
         <activity
             android:name=".ui.LoginActivity"
@@ -51,9 +56,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="devid.sandtler.club"
-                    android:pathPrefix="/watch" />
+                    android:pathPrefix="/watch"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -69,7 +74,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             android:name=".lib.AuthenticatorService"
             android:enabled="true"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -77,7 +81,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
-
         </service>
 
     </application>

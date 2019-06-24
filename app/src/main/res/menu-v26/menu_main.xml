@@ -20,8 +20,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--
+    TODO: Let Android tint the icon color manually rather
+          than hardcoding it into the actual icon file.
+    -->
     <item
         android:id="@+id/menu_item_my_account"
+        android:iconTint="@color/app_bar_icon_color"
         android:icon="@drawable/ic_account_circle_white_24dp"
         android:title="@string/menu_my_account"
         app:showAsAction="ifRoom" />
