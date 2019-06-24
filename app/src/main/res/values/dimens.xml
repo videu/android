@@ -24,4 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <dimen name="appbar_padding">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <dimen name="font_user_display_name">24sp</dimen>
+    <dimen name="font_user_user_name">16sp</dimen>
 </resources>

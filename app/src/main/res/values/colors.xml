@@ -23,4 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <color name="colorAccent">#FF6D00</color>
 
     <color name="app_bar_icon_color">#FFFFFF</color>
+
+    <color name="font_hint">#00000070</color>
 </resources>

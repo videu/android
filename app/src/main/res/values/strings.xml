@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <string name="account_type" translatable="false">
         club.sandtler.devid
     </string>
+    <string name="user_name_at_prefix_tmpl" translatable="false">\@%s</string>
 
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_user_name">User name</string>
@@ -34,11 +35,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <string name="invalid_password">Password must be >=8 characters long</string>
     <string name="login_failed">Login failed</string>
 
+    <string name="msg_loading">Loading …</string>
+
     <string name="title_activity_user_view">User</string>
     <string name="tab_text_overview">Overview</string>
     <string name="tab_text_videos">Videos</string>
     <string name="tab_text_details">Info</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -21,21 +21,122 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
+import club.sandtler.devid.DEvidApp;
 import club.sandtler.devid.R;
+import club.sandtler.devid.data.Result;
+import club.sandtler.devid.data.model.User;
+import club.sandtler.devid.ui.UserViewActivity;
 
 /**
  * Fragment class for displaying the "overview" tab in the user view activity.
  */
 public class UserOverviewFragment extends Fragment {
 
+    public static final String KEY_USER_ID = UserViewActivity.EXTRA_USER_ID;
+    public static final String KEY_USER_NAME = UserViewActivity.EXTRA_USER_NAME;
+
+    /** The view model. */
+    private UserViewModel mViewModel;
+
+    /** The display name text view. */
+    private TextView mDisplayNameText;
+    /** The user name text view. */
+    private TextView mUserNameText;
+
+    /**
+     * Get a new instance of this fragment.
+     *
+     * @param userSpec A bundle containing either the user name or id to display.
+     * @return The new fragment instance.
+     */
+    public static UserOverviewFragment newInstance(Bundle userSpec) {
+        UserOverviewFragment frag = new UserOverviewFragment();
+        frag.setArguments(userSpec);
+        return frag;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.mViewModel = ViewModelProviders.of(this, new UserViewModelFactory())
+                .get(UserViewModel.class);
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_user_overview, container, false);
+        View root = inflater.inflate(R.layout.fragment_user_overview, container, false);
+
+        this.mDisplayNameText = root.findViewById(R.id.user_overview_display_name);
+        this.mUserNameText = root.findViewById(R.id.user_overview_user_name);
+        handleFragmentArgs(getArguments());
+
+        return root;
+    }
+
+    /**
+     * Process all arguments passed to this fragment.
+     * @param args
+     */
+    private void handleFragmentArgs(@Nullable Bundle args) {
+        if (args == null) {
+            return;
+        }
+
+        LiveData<Result<User>> data;
+        if (args.containsKey(KEY_USER_ID)) {
+            data = this.mViewModel.getById(args.getString(KEY_USER_ID));
+        } else if (args.containsKey(KEY_USER_NAME)) {
+            data = this.mViewModel.getByUserName(args.getString(KEY_USER_NAME));
+        } else {
+            return;
+        }
+
+        data.observe(this, new Observer<Result<User>>() {
+
+            @Override
+            public void onChanged(Result<User> userResult) {
+                if (userResult instanceof Result.Success) {
+                    updateUIWithUser(((Result.Success<User>) userResult).getData());
+                } else if (userResult instanceof Result.Error) {
+                    updateUIWithError(((Result.Error) userResult).getError());
+                }
+            }
+
+        });
+    }
+
+    /**
+     * Update the UI when the user data has been fetched successfully.
+     *
+     * @param u The user.
+     */
+    private void updateUIWithUser(User u) {
+        this.mDisplayNameText.setText(u.getDisplayName());
+
+        String userNameTmpl = getResources().getString(R.string.user_name_at_prefix_tmpl);
+        this.mUserNameText.setText(String.format(userNameTmpl, u.getUserName()));
+    }
+
+    /**
+     * Update the UI to display an error message.
+     *
+     * @param e The Exception that occurred while retrieving the user data.
+     */
+    private void updateUIWithError(Exception e) {
+        // TODO: Show an actual error message
+        Toast.makeText(DEvidApp.getAppContext(), e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
 }

@@ -37,7 +37,7 @@ public class UserViewModel extends ViewModel {
     private UserRepository mRepository;
 
     /** The user data that is to be exposed to the activity. */
-    private MutableLiveData<User> mUser;
+    private MutableLiveData<Result<User>> mUser;
 
     /**
      * Create a new View model.
@@ -55,7 +55,7 @@ public class UserViewModel extends ViewModel {
      * @param userName The user name.
      * @return The LiveData.
      */
-    public LiveData<User> getByUserName(String userName) {
+    public LiveData<Result<User>> getByUserName(String userName) {
         if (this.mUser == null) {
             this.mUser = new MutableLiveData<>();
             new UserLoadTask().execute(UserViewActivity.EXTRA_USER_NAME, userName);
@@ -71,7 +71,7 @@ public class UserViewModel extends ViewModel {
      * @param id The user id.
      * @return The LiveData.
      */
-    public LiveData<User> getById(String id) {
+    public LiveData<Result<User>> getById(String id) {
         if (this.mUser == null) {
             this.mUser = new MutableLiveData<>();
             new UserLoadTask().execute(UserViewActivity.EXTRA_USER_ID, id);
@@ -113,9 +113,7 @@ public class UserViewModel extends ViewModel {
 
         @Override
         protected void onPostExecute(Result<User> result) {
-            if (result instanceof Result.Success) {
-                mUser.setValue(((Result.Success<User>) result).getData());
-            }
+            mUser.setValue(result);
         }
 
     }

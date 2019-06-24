@@ -17,6 +17,7 @@
 
 package club.sandtler.devid.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
@@ -25,7 +26,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import club.sandtler.devid.R;
-import club.sandtler.devid.ui.user.UserSectionsPagerAdapter;
+import club.sandtler.devid.ui.user.UserTabsPagerAdapter;
 
 /**
  * Activity for displaying a user profile.
@@ -51,14 +52,30 @@ public class UserViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_view);
 
-        UserSectionsPagerAdapter sectionsPagerAdapter =
-                new UserSectionsPagerAdapter(this, getSupportFragmentManager());
+        UserTabsPagerAdapter sectionsPagerAdapter = new UserTabsPagerAdapter(
+                this,
+                getSupportFragmentManager(),
+                getUserSpec()
+        );
 
         ViewPager viewPager = findViewById(R.id.user_view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
 
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+    }
+
+    private Bundle getUserSpec() {
+        Intent intent = getIntent();
+        Bundle bundle = new Bundle();
+
+        if (intent.hasExtra(EXTRA_USER_ID)) {
+            bundle.putString(EXTRA_USER_ID, intent.getStringExtra(EXTRA_USER_ID));
+        } else if (intent.hasExtra(EXTRA_USER_NAME)) {
+            bundle.putString(EXTRA_USER_NAME, intent.getStringExtra(EXTRA_USER_NAME));
+        }
+
+        return bundle;
     }
 
 }
