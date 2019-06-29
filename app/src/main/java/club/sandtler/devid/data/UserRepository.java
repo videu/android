@@ -33,7 +33,7 @@ import club.sandtler.devid.data.model.User;
 public class UserRepository {
 
     /** The instance. */
-    private static volatile UserRepository instance;
+    private static volatile UserRepository sInstance;
 
     /** The data source for retrieving information from the backend server. */
     private UserDataSource mDataSource;
@@ -60,11 +60,11 @@ public class UserRepository {
      */
     @NonNull
     public static UserRepository getInstance(UserDataSource dataSource) {
-        if (instance == null) {
-            instance = new UserRepository(dataSource);
+        if (sInstance == null) {
+            sInstance = new UserRepository(dataSource);
         }
 
-        return instance;
+        return sInstance;
     }
 
     /**
