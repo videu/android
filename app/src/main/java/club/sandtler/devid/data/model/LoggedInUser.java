@@ -19,28 +19,30 @@ package club.sandtler.devid.data.model;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
 
 /**
- * Data class that captures user information for
- * logged in users retrieved from LoginRepository.
+ * Data class that captures user information for logged in users
+ * retrieved from {@link club.sandtler.devid.data.LoginRepository}.
  */
 public class LoggedInUser extends User {
 
-    public static final String KEY_ID = "id";
-    public static final String KEY_AUTH_TOKEN = "authToken";
-    public static final String KEY_USER_NAME = "userName";
-    public static final String KEY_DISPLAY_NAME = "displayName";
+    /** JSON object key for the authentication token. */
+    public static final String KEY_AUTH_TOKEN = "token";
+    /** JSON object key for the email address. */
     public static final String KEY_EMAIL = "email";
-    public static final String KEY_JOINED_DATE = "joinedDate";
+    /** JSON object key for the embedded user object. */
+    public static final String KEY_USER_OBJ = "user";
 
     /** The login authentication token. */
-    private String authToken;
+    private String mAuthToken;
     /** The email address. */
-    private String email;
+    private String mEmail;
 
     /**
      * Create a new logged in user model.
@@ -56,8 +58,8 @@ public class LoggedInUser extends User {
                         String email, String authToken) {
         super(id, userName, displayName, joinedDate);
 
-        this.authToken = authToken;
-        this.email = email;
+        mAuthToken = authToken;
+        mEmail = email;
     }
 
     public LoggedInUser(Bundle bundle) {
@@ -68,8 +70,8 @@ public class LoggedInUser extends User {
                 new Date(bundle.getLong(LoggedInUser.KEY_JOINED_DATE))
         );
 
-        this.authToken = bundle.getString(LoggedInUser.KEY_AUTH_TOKEN);
-        this.email = bundle.getString(LoggedInUser.KEY_EMAIL);
+        mAuthToken = bundle.getString(LoggedInUser.KEY_AUTH_TOKEN);
+        mEmail = bundle.getString(LoggedInUser.KEY_EMAIL);
     }
 
     /**
@@ -80,18 +82,24 @@ public class LoggedInUser extends User {
      * @throws JSONException If the JSON object was malformed.
      */
     public static LoggedInUser fromJSON(JSONObject json) throws JSONException {
-        JSONObject user = json.getJSONObject("user");
+        JSONObject user = json.getJSONObject(KEY_USER_OBJ);
 
-        final String id = user.getString("_id");
-        String userName = user.getString("userName");
-        String displayName = user.getString("displayName");
-        Date joinedDate = new Date(user.getLong("joinedDate"));
-        String email = user.getString("email");
-        String authToken = json.getString("token");
+        final String id = user.getString(KEY_ID);
+        String userName = user.getString(KEY_USER_NAME);
+        String displayName = user.getString(KEY_DISPLAY_NAME);
+        final Date joinedDate = new Date(user.getLong(KEY_JOINED_DATE));
+        String email = user.getString(KEY_EMAIL);
+        String authToken = json.getString(KEY_AUTH_TOKEN);
 
         return new LoggedInUser(id, userName, displayName, joinedDate, email, authToken);
     }
 
+    /**
+     * Return a bundle containing all data necessary
+     * to reconstruct this instance.
+     *
+     * @return The bundled LoggedInUser.
+     */
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
 
@@ -111,16 +119,18 @@ public class LoggedInUser extends User {
      * @return The JSONObject.
      */
     @Override
+    @Nullable
     public JSONObject toJSON() {
         JSONObject user = super.toJSON();
-        if (user == null)
-                return null;
+        if (user == null) {
+            return null;
+        }
 
         JSONObject json = new JSONObject();
         try {
-            user.put("email", this.getEmail());
-            json.put("user", user);
-            json.put("token", this.getAuthToken());
+            user.put(KEY_EMAIL, getEmail());
+            json.put(KEY_USER_OBJ, user);
+            json.put(KEY_AUTH_TOKEN, getAuthToken());
         } catch (JSONException e) {
             return null;
         }
@@ -134,7 +144,7 @@ public class LoggedInUser extends User {
      * @return The authentication token.
      */
     public String getAuthToken() {
-        return this.authToken;
+        return mAuthToken;
     }
 
     /**
@@ -143,7 +153,7 @@ public class LoggedInUser extends User {
      * @return The email address.
      */
     public String getEmail() {
-        return this.email;
+        return mEmail;
     }
 
 }

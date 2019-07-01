@@ -27,14 +27,23 @@ import java.util.Date;
  */
 public class User {
 
+    /** JSON object key for the user id. */
+    public static final String KEY_ID = "_id";
+    /** JSON object key for the user name. */
+    public static final String KEY_USER_NAME = "userName";
+    /** JSON object key for the display name. */
+    public static final String KEY_DISPLAY_NAME = "displayName";
+    /** JSON object key for the sign-up date. */
+    public static final String KEY_JOINED_DATE = "joinedDate";
+
     /** The unique user id. */
-    protected final String id;
+    protected final String mId;
     /** The user (@) name. */
-    private String userName;
+    private String mUserName;
     /** The display name. */
-    private String displayName;
+    private String mDisplayName;
     /** The date this user signed up. */
-    private final Date joinedDate;
+    private final Date mJoinedDate;
 
     /**
      * Create a new user instance.
@@ -45,10 +54,10 @@ public class User {
      * @param joinedDate The date this user signed up.
      */
     public User(final String id, String userName, String displayName, final Date joinedDate) {
-        this.id = id;
-        this.userName = userName;
-        this.displayName = displayName;
-        this.joinedDate = joinedDate;
+        mId = id;
+        mUserName = userName;
+        mDisplayName = displayName;
+        mJoinedDate = joinedDate;
     }
 
     /**
@@ -59,10 +68,10 @@ public class User {
      * @throws JSONException If the JSON object was malformed.
      */
     public static User fromJSON(JSONObject json) throws JSONException {
-        final String id = json.getString("_id");
-        String userName = json.getString("userName");
-        String displayName = json.getString("displayName");
-        Date joinedDate = new Date(json.getLong("joinedDate"));
+        final String id = json.getString(KEY_ID);
+        String userName = json.getString(KEY_USER_NAME);
+        String displayName = json.getString(KEY_DISPLAY_NAME);
+        Date joinedDate = new Date(json.getLong(KEY_JOINED_DATE));
 
         return new User(id, userName, displayName, joinedDate);
     }
@@ -76,10 +85,10 @@ public class User {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("_id", this.getId());
-            json.put("userName", this.getUserName());
-            json.put("displayName", this.getDisplayName());
-            json.put("joinedDate", this.getJoinedDate().getTime());
+            json.put(KEY_ID, getId());
+            json.put(KEY_USER_NAME, getUserName());
+            json.put(KEY_DISPLAY_NAME, getDisplayName());
+            json.put(KEY_JOINED_DATE, getJoinedDate().getTime());
         } catch (JSONException e) {
             return null;
         }
@@ -93,7 +102,7 @@ public class User {
      * @return The user id.
      */
     public String getId() {
-        return this.id;
+        return mId;
     }
 
     /**
@@ -102,7 +111,7 @@ public class User {
      * @return The user name.
      */
     public String getUserName() {
-        return this.userName;
+        return mUserName;
     }
 
     /**
@@ -111,7 +120,7 @@ public class User {
      * @return The display name.
      */
     public String getDisplayName() {
-        return this.displayName;
+        return mDisplayName;
     }
 
     /**
@@ -120,7 +129,7 @@ public class User {
      * @return The sign up date.
      */
     public Date getJoinedDate() {
-        return this.joinedDate;
+        return mJoinedDate;
     }
 
 }

@@ -36,27 +36,41 @@ public class Video {
     /** Key for no own rating. */
     public static final byte RATING_NEUTRAL = 0;
 
+    public static final String KEY_VIDEO_ID = "_id";
+    public static final String KEY_USER_ID = "user_id";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_UPLOAD_DATE = "time";
+    public static final String KEY_DURATION = "duration";
+    public static final String KEY_RATING_OBJ = "rating";
+    public static final String KEY_RATING_LIKES = "likes";
+    public static final String KEY_RATING_DISLIKES = "dislikes";
+    public static final String KEY_OWN_RATING = "own";
+
     /** The video id. */
-    private final String id;
+    private final String mId;
+    /** The user id who uploaded the video. */
+    private final String mUserId;
     /** The video title. */
-    private String title;
+    private String mTitle;
     /** The video description. */
-    private String description;
+    private String mDescription;
     /** The video upload date. */
-    private Date uploadDate;
+    private Date mUploadDate;
     /** The video duration in seconds. */
-    private long duration;
+    private long mDuration;
     /** The amount of likes this video has so far. */
-    private long likes;
+    private long mLikes;
     /** The amount of dislikes this video has so far. */
-    private long dislikes;
+    private long mDislikes;
     /** The currently logged in user's own video rating. */
-    private byte ownRating;
+    private byte mOwnRating;
 
     /**
      * Create a new Video.
      *
      * @param id The video id.
+     * @param userId The user id who uploaded the video.
      * @param title The video title.
      * @param description The video description.
      * @param uploadedDate The upload date.
@@ -64,16 +78,17 @@ public class Video {
      * @param likes The amount of likes this video got so far.
      * @param dislikes The amount of dislikes this video got so far.
      */
-    public Video(final String id, String title, String description, Date uploadedDate,
-                 long duration, long likes, long dislikes) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.uploadDate = uploadedDate;
-        this.duration = duration;
-        this.likes = likes;
-        this.dislikes = dislikes;
-        this.ownRating = Video.RATING_NEUTRAL;
+    public Video(final String id, final String userId, String title, String description,
+                 Date uploadedDate, long duration, long likes, long dislikes) {
+        mId = id;
+        mUserId = userId;
+        mTitle = title;
+        mDescription = description;
+        mUploadDate = uploadedDate;
+        mDuration = duration;
+        mLikes = likes;
+        mDislikes = dislikes;
+        mOwnRating = Video.RATING_NEUTRAL;
     }
 
     /**
@@ -88,16 +103,17 @@ public class Video {
      * @param dislikes The amount of dislikes this video got so far.
      * @param ownRating The user's own rating.
      */
-    public Video(final String id, String title, String description, Date uploadedDate,
-                 long duration, long likes, long dislikes, byte ownRating) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.uploadDate = uploadedDate;
-        this.duration = duration;
-        this.likes = likes;
-        this.dislikes = dislikes;
-        this.ownRating = ownRating;
+    public Video(final String id, final String userId, String title, String description,
+                 Date uploadedDate, long duration, long likes, long dislikes, byte ownRating) {
+        mId = id;
+        mUserId = userId;
+        mTitle = title;
+        mDescription = description;
+        mUploadDate = uploadedDate;
+        mDuration = duration;
+        mLikes = likes;
+        mDislikes = dislikes;
+        mOwnRating = ownRating;
     }
 
     /**
@@ -109,17 +125,37 @@ public class Video {
      */
     @NonNull
     public static Video fromJSON(JSONObject json) throws JSONException {
-        String id = json.getString("_id");
-        String title = json.getString("title");
-        String description = json.getString("description");
-        Date uploadedDate = new Date(json.getLong("uploaded"));
-        long duration = json.getLong("duration");
+        String videoId = json.getString(KEY_VIDEO_ID);
+        String userId = json.getString(KEY_USER_ID);
+        String title = json.getString(KEY_TITLE);
+        String description = json.getString(KEY_DESCRIPTION);
+        Date uploadedDate = new Date(json.getLong(KEY_UPLOAD_DATE));
+        long duration = json.getLong(KEY_DURATION);
 
-        JSONObject rating = json.getJSONObject("rating");
-        long likes = rating.getLong("likes");
-        long dislikes = rating.getLong("dislikes");
+        long likes = 0, dislikes = 0;
+        byte ownVote = RATING_NEUTRAL;
 
-        return new Video(id, title, description, uploadedDate, duration, likes, dislikes);
+        if (json.has(KEY_RATING_OBJ)) {
+            JSONObject rating = json.getJSONObject(KEY_RATING_OBJ);
+            likes = rating.getLong(KEY_RATING_LIKES);
+            dislikes = rating.getLong(KEY_RATING_DISLIKES);
+
+            if (rating.has(KEY_OWN_RATING)) {
+                ownVote = (byte) rating.getInt(KEY_OWN_RATING);
+            }
+        }
+
+        return new Video(
+                videoId,
+                userId,
+                title,
+                description,
+                uploadedDate,
+                duration,
+                likes,
+                dislikes,
+                ownVote
+        );
     }
 
     /**
@@ -128,7 +164,16 @@ public class Video {
      * @return The video id.
      */
     public String getId() {
-        return this.id;
+        return mId;
+    }
+
+    /**
+     * Return the user id who uploaded this video.
+     *
+     * @return The user id.
+     */
+    public String getUserId() {
+        return mUserId;
     }
 
     /**
@@ -137,7 +182,7 @@ public class Video {
      * @return The title.
      */
     public String getTitle() {
-        return this.title;
+        return mTitle;
     }
 
     /**
@@ -146,7 +191,7 @@ public class Video {
      * @return The description.
      */
     public String getDescription() {
-        return this.description;
+        return mDescription;
     }
 
     /**
@@ -155,7 +200,7 @@ public class Video {
      * @return The upload date.
      */
     public Date getUploadDate() {
-        return this.uploadDate;
+        return mUploadDate;
     }
 
     /**
@@ -164,7 +209,7 @@ public class Video {
      * @return The video duration, in seconds.
      */
     public long getDuration() {
-        return this.duration;
+        return mDuration;
     }
 
     /**
@@ -173,7 +218,7 @@ public class Video {
      * @return The amount of likes.
      */
     public long getLikes() {
-        return this.likes;
+        return mLikes;
     }
 
     /**
@@ -182,7 +227,7 @@ public class Video {
      * @return The amount of dislikes.
      */
     public long getDislikes() {
-        return this.dislikes;
+        return mDislikes;
     }
 
     /**
@@ -191,7 +236,7 @@ public class Video {
      * @return The total amount of video ratings.
      */
     public long getRatings() {
-        return this.likes + this.dislikes;
+        return mLikes + mDislikes;
     }
 
     /**
@@ -203,7 +248,7 @@ public class Video {
      * @see Video#RATING_NEUTRAL
      */
     public byte getOwnRating() {
-        return this.ownRating;
+        return mOwnRating;
     }
 
 }
