@@ -59,7 +59,7 @@ import club.sandtler.devid.BuildConfig;
 public final class NetworkUtil {
 
     /** The default instance. */
-    private static final NetworkUtil defaultInstance = new NetworkUtil(null);
+    private static final NetworkUtil DEFAULT_INSTANCE = new NetworkUtil(null);
 
     /** The authentication token. */
     private final String mAuthToken;
@@ -71,13 +71,13 @@ public final class NetworkUtil {
      */
     @NonNull
     public static NetworkUtil getDefault() {
-        return NetworkUtil.defaultInstance;
+        return DEFAULT_INSTANCE;
     }
 
     /**
      * Create a new authenticated network utility.
      * If the authentication token is null, the <code>Authentication</code>
-     * request header will be left out.
+     * request header will be omitted.
      *
      * @param authToken The logged in user's authentication token.
      */
@@ -91,13 +91,14 @@ public final class NetworkUtil {
             disableAllSSLCertificateChecks();
         }
 
-        this.mAuthToken = authToken;
+        mAuthToken = authToken;
     }
 
     /**
      * Preform a HTTP GET request and return the JSON response.
      *
-     * @param path The request path.
+     * @param path The request path (will be appended to
+     *             {@link Constants.URLPaths#BACKEND_ROOT}).
      * @return The JSON response, or null if it was empty.
      * @throws IOException If an I/O error occurred.
      * @throws JSONException If the JSON response was malformed.
@@ -120,7 +121,8 @@ public final class NetworkUtil {
     /**
      * Perform a HTTP POST request and return the JSON response.
      *
-     * @param path The absolute request path.
+     * @param path The absolute request path (will be appended to
+     *             {@link Constants.URLPaths#BACKEND_ROOT}).
      * @param body The request body.
      * @return The JSON response.
      * @throws IOException If there was an error while transmitting data.
@@ -156,13 +158,14 @@ public final class NetworkUtil {
      * Perform a HTTP GET request to the CDN and
      * parse the response body as a Bitmap.
      *
-     * @param path The absolute URL path.
+     * @param path The absolute URL path (will be appended to
+     *             {@link Constants.URLPaths#CDN_ROOT}).
      * @return The parsed Bitmap.
      * @throws IOException If there was a network error,
      *                     or the response did not contain an image.
      */
     public Bitmap getBitmap(@NonNull String path) throws IOException {
-        InputStream in = new URL(Constants.CDN_ROOT + path).openStream();
+        InputStream in = new URL(Constants.URLPaths.CDN_ROOT + path).openStream();
         return BitmapFactory.decodeStream(in);
     }
 
@@ -171,17 +174,17 @@ public final class NetworkUtil {
      * and set common headers.
      *
      * @param path The absolute request path (will be appended to
-     *             {@link Constants#BACKEND_ROOT})
+     *             {@link Constants.URLPaths#BACKEND_ROOT}).
      * @return The new connection.
      * @throws IOException If the URL was malformed, or the connection could
      *                     not be established.
      */
     private HttpsURLConnection getConnection(String path) throws IOException {
-        URL url = new URL(Constants.BACKEND_ROOT + path);
+        URL url = new URL(Constants.URLPaths.BACKEND_ROOT + path);
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 
-        if (this.mAuthToken != null) {
-            conn.setRequestProperty("Authentication", "Bearer " + this.mAuthToken);
+        if (mAuthToken != null) {
+            conn.setRequestProperty("Authentication", "Bearer " + mAuthToken);
         }
 
         conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");

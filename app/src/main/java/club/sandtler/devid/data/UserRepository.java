@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 
 import club.sandtler.devid.data.model.User;
+import club.sandtler.devid.lib.Constants;
 
 /**
  * Class that requests user information from the backend server over the
@@ -32,7 +33,7 @@ import club.sandtler.devid.data.model.User;
  */
 public class UserRepository {
 
-    /** The instance. */
+    /** The instance (singleton access). */
     private static volatile UserRepository sInstance;
 
     /** The data source for retrieving information from the backend server. */
@@ -127,7 +128,14 @@ public class UserRepository {
      * @param user The user.
      */
     private void putToCache(User user) {
+        if (mCacheById.size() > Constants.CacheSize.MAX_USER_MEM) {
+            User removeUser = mCacheById.entrySet().iterator().next().getValue();
+            mCacheById.remove(removeUser.getId());
+            mCacheByUserName.remove(removeUser.getUserName());
+        }
+
         mCacheById.put(user.getId(), user);
         mCacheByUserName.put(user.getUserName(), user);
     }
+
 }

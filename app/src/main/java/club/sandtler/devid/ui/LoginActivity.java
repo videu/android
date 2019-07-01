@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 
 import club.sandtler.devid.R;
 import club.sandtler.devid.data.LoginDataSource;
+import club.sandtler.devid.data.LoginRepository;
 import club.sandtler.devid.data.Result;
 import club.sandtler.devid.data.model.LoggedInUser;
 import club.sandtler.devid.lib.Constants;
@@ -71,6 +72,10 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     private EditText mUserNameEditText;
     private EditText mPasswordEditText;
     private Button mLoginButton;
+    /**
+     * The progress bar shown while waiting for an
+     * authentication response from the backend.
+     */
     private ProgressBar mProgressBar;
 
     @Override
@@ -79,16 +84,16 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
         setContentView(R.layout.activity_login);
 
-        this.mUserNameEditText = findViewById(R.id.login_user_name);
-        this.mPasswordEditText = findViewById(R.id.login_password);
-        this.mProgressBar = findViewById(R.id.login_loading);
-        this.mLoginButton = findViewById(R.id.login_button);
+        mUserNameEditText = findViewById(R.id.login_user_name);
+        mPasswordEditText = findViewById(R.id.login_password);
+        mProgressBar = findViewById(R.id.login_loading);
+        mLoginButton = findViewById(R.id.login_button);
 
-        this.mAccountMgr = AccountManager.get(this);
+        mAccountMgr = AccountManager.get(this);
 
         Intent intent = getIntent();
-        if (intent.hasExtra(LoginActivity.EXTRA_ACCOUNT_NAME)) {
-            this.mUserNameEditText.setText(intent.getStringExtra(LoginActivity.EXTRA_ACCOUNT_NAME));
+        if (intent.hasExtra(EXTRA_ACCOUNT_NAME)) {
+            mUserNameEditText.setText(intent.getStringExtra(EXTRA_ACCOUNT_NAME));
         }
 
         // Update the login button if both username and password input
@@ -111,10 +116,10 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             }
 
         };
-        this.mUserNameEditText.addTextChangedListener(afterTextChangedListener);
-        this.mPasswordEditText.addTextChangedListener(afterTextChangedListener);
+        mUserNameEditText.addTextChangedListener(afterTextChangedListener);
+        mPasswordEditText.addTextChangedListener(afterTextChangedListener);
 
-        this.mPasswordEditText.setOnEditorActionListener(
+        mPasswordEditText.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
 
                     @Override
@@ -137,13 +142,13 @@ public class LoginActivity extends AccountAuthenticatorActivity {
      * @param v The view.
      */
     public void handleLogin(@Nullable View v) {
-        String userName = this.mUserNameEditText.getText().toString();
-        String password = this.mPasswordEditText.getText().toString();
+        String userName = mUserNameEditText.getText().toString();
+        String password = mPasswordEditText.getText().toString();
 
         if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
             showProgress();
-            this.mLoginTask = new LoginTask();
-            this.mLoginTask.execute(userName, password);
+            mLoginTask = new LoginTask();
+            mLoginTask.execute(userName, password);
         }
     }
 
@@ -152,20 +157,20 @@ public class LoginActivity extends AccountAuthenticatorActivity {
      * both username and password inputs are filled out.
      */
     private void updateLoginButton() {
-        String userName = this.mUserNameEditText.getText().toString().trim();
-        String password = this.mPasswordEditText.getText().toString();
+        String userName = mUserNameEditText.getText().toString().trim();
+        String password = mPasswordEditText.getText().toString();
 
-        this.mLoginButton.setEnabled(!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password));
+        mLoginButton.setEnabled(!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password));
     }
 
     /** Show the progress bar. */
     private void showProgress() {
-        this.mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     /** Hide the progress bar. */
     private void hideProgress() {
-        this.mProgressBar.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     /**
@@ -175,16 +180,19 @@ public class LoginActivity extends AccountAuthenticatorActivity {
      */
     private void onAuthSuccess(LoggedInUser user) {
         final Account account = new Account(user.getUserName(), Constants.ACCOUNT_TYPE);
-        this.mAccountMgr.setAuthToken(account, Constants.AUTH_TOKEN_TYPE, user.getAuthToken());
-        this.mAccountMgr.addAccountExplicitly(
+
+        mAccountMgr.setAuthToken(account, Constants.AUTH_TOKEN_TYPE, user.getAuthToken());
+        mAccountMgr.addAccountExplicitly(
                 account,
                 this.mPasswordEditText.getText().toString(),
                 user.toBundle()
         );
+
         final Intent intent = new Intent();
         intent.putExtra(AccountManager.KEY_BOOLEAN_RESULT, true);
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
+
         String welcomeMsg = String.format(getString(R.string.welcome), user.getDisplayName());
         Toast.makeText(this, welcomeMsg, Toast.LENGTH_LONG).show();
         finish();
@@ -204,7 +212,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
      * Callback for cancelled authentication attempts.
      */
     private void onAuthCancelled() {
-        this.mLoginTask = null;
+        mLoginTask = null;
         hideProgress();
     }
 
@@ -215,7 +223,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected Result<LoggedInUser> doInBackground(String... params) {
-            return new LoginDataSource().loginSync(params[0], params[1]);
+            return LoginRepository.getInstance(new LoginDataSource()).login(params[0], params[1]);
         }
 
         @Override

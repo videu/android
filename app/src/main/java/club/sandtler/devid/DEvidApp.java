@@ -30,20 +30,20 @@ import androidx.annotation.Nullable;
 public class DEvidApp extends Application {
 
     /** The application context. */
-    /* This is ok because it gets null-referenced upon termination. */
+    /* This is ok because it gets null-referenced upon app termination. */
     @SuppressLint("StaticFieldLeak")
-    private static Context context;
+    private static Context sContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        DEvidApp.context = getApplicationContext();
+        DEvidApp.sContext = getApplicationContext();
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        DEvidApp.context = null;
+        DEvidApp.sContext = null;
     }
 
     /**
@@ -53,7 +53,7 @@ public class DEvidApp extends Application {
      */
     @Nullable
     public static Context getAppContext() {
-        return DEvidApp.context;
+        return sContext;
     }
 
 }

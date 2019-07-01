@@ -21,28 +21,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import club.sandtler.devid.data.model.LoggedInUser;
+import club.sandtler.devid.lib.Constants;
 import club.sandtler.devid.lib.NetworkUtil;
 
 /**
  * Class that handles authentication w/ login credentials
  * and retrieves user information.
  */
-public class LoginDataSource {
-
-    /** The HTTP URL string to send the login request to. */
-    private static final String LOGIN_PATH = "/user/login";
-
-    /** The network utility instance for performing the POST request. */
-    private final NetworkUtil mNetworkUtil;
-
-    /**
-     * Create a new login data source.
-     */
-    public LoginDataSource() {
-        // The default instance does not carry authentication headers,
-        // which is what we want here (we don't have an auth token yet).
-        this.mNetworkUtil = NetworkUtil.getDefault();
-    }
+public class LoginDataSource extends AbstractDataSource {
 
     /**
      * Attempt to login with the given credentials.
@@ -52,12 +38,15 @@ public class LoginDataSource {
      * @param password The password.
      * @return The logged in user, or an error object it the login failed.
      */
-    public Result<LoggedInUser> loginSync(String userName, String password) {
+    public Result<LoggedInUser> login(String userName, String password) {
         try {
             final JSONObject request = credsToJSON(userName, password);
-            final JSONObject response = this.mNetworkUtil.post(LOGIN_PATH, request);
-            if (response.has("err"))
+            final JSONObject response = getNetworkUtil()
+                    .post(Constants.URLPaths.USER_LOGIN, request);
+
+            if (response.has("err")) {
                 return new Result.Error(new Exception(response.getString("err")));
+            }
 
             return new Result.Success<>(LoggedInUser.fromJSON(response));
         } catch (Exception e) {
@@ -67,6 +56,9 @@ public class LoginDataSource {
 
     void logout() {
         // TODO: revoke authentication
+
+        // This may actually not be necessary at all since
+        // the auth token just needs to be deleted.
     }
 
     /**

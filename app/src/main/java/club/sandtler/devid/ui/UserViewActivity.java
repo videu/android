@@ -65,6 +65,11 @@ public class UserViewActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
     }
 
+    /**
+     * Return a bundle containing either the user name or their id.
+     *
+     * @return The user specification.
+     */
     private Bundle getUserSpec() {
         Intent intent = getIntent();
         Bundle bundle = new Bundle();

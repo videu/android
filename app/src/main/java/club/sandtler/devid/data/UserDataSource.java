@@ -26,33 +26,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import club.sandtler.devid.data.model.User;
-import club.sandtler.devid.lib.NetworkUtil;
+import static club.sandtler.devid.lib.Constants.URLPaths;
 
 /**
  * Class for retrieving other user's data from the backend server.
  *
  * TODO: Use resource string ids rather than hard-coded error messages
  */
-public class UserDataSource {
-
-    /** The HTTP URL string for retrieving a user by their user name. */
-    private static final String BY_USER_NAME_PATH = "/user/byUserName/%s";
-    /** The HTTP URL string for retrieving a user by their unique id. */
-    private static final String BY_ID_PATH = "/user/byId/%s";
-    /** The HTTP URL string for retrieving a profile picture from the CDN. */
-    private static final String PP_PATH = "/pp/%s";
-
-    /** The network utility instance for performing the POST request. */
-    private final NetworkUtil mNetworkUtil;
-
-    /**
-     * Create a new user data source.
-     */
-    public UserDataSource() {
-        // The default instance does not carry authentication headers,
-        // which is what we want here (we don't have an auth token yet).
-        this.mNetworkUtil = NetworkUtil.getDefault();
-    }
+public class UserDataSource extends AbstractDataSource {
 
     /**
      * Fetch user details from the backend server.
@@ -65,7 +46,7 @@ public class UserDataSource {
             return new Result.Error(new IllegalArgumentException("Invalid user id format"));
         }
 
-        final String path = String.format(UserDataSource.BY_ID_PATH, userId);
+        final String path = String.format(URLPaths.USER_BY_ID, userId);
         return retrieveByPath(path);
     }
 
@@ -80,12 +61,12 @@ public class UserDataSource {
             return new Result.Error(new IllegalArgumentException("Invalid username"));
         }
 
-        final String path = String.format(UserDataSource.BY_USER_NAME_PATH, userName);
+        final String path = String.format(URLPaths.USER_BY_USER_NAME, userName);
         return retrieveByPath(path);
     }
 
     /**
-     * Download the user's profile picture, if present.
+     * Download and parse the user's profile picture, if present.
      *
      * @param userId The user id.
      * @return The user's profile picture.
@@ -98,7 +79,7 @@ public class UserDataSource {
         Bitmap bm;
 
         try {
-            bm = this.mNetworkUtil.getBitmap(String.format(PP_PATH, userId));
+            bm = getNetworkUtil().getBitmap(String.format(URLPaths.CDN_PP_DEFAULT, userId));
         } catch (IOException e) {
             return new Result.Error(e);
         }
@@ -114,7 +95,7 @@ public class UserDataSource {
      */
     private Result<User> retrieveByPath(String path) {
         try {
-            final JSONObject userData = this.mNetworkUtil.get(path);
+            final JSONObject userData = getNetworkUtil().get(path);
             return new Result.Success<>(User.fromJSON(userData));
         } catch (Exception e) {
             return new Result.Error(e);

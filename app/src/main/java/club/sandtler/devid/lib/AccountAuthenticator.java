@@ -27,6 +27,7 @@ import android.os.Bundle;
 
 import club.sandtler.devid.R;
 import club.sandtler.devid.data.LoginDataSource;
+import club.sandtler.devid.data.LoginRepository;
 import club.sandtler.devid.data.Result;
 import club.sandtler.devid.data.model.LoggedInUser;
 import club.sandtler.devid.ui.LoginActivity;
@@ -36,6 +37,7 @@ import club.sandtler.devid.ui.LoginActivity;
  */
 public final class AccountAuthenticator extends AbstractAccountAuthenticator {
 
+    /** The context. */
     private Context mContext;
 
     /**
@@ -62,7 +64,6 @@ public final class AccountAuthenticator extends AbstractAccountAuthenticator {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
 
-
         return bundle;
     }
 
@@ -84,10 +85,12 @@ public final class AccountAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
                                String authTokenType, Bundle options) {
+        // TODO: Don't store the password on the device
         final AccountManager am = AccountManager.get(this.mContext);
         final String password = am.getPassword(account);
         if (password != null) {
-            Result<LoggedInUser> result = new LoginDataSource().loginSync(account.name, password);
+            Result<LoggedInUser> result = LoginRepository.getInstance(new LoginDataSource())
+                    .login(account.name, password);
 
             if (result instanceof Result.Success) {
                 LoggedInUser user = ((Result.Success<LoggedInUser>) result).getData();

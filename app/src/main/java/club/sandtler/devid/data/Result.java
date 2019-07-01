@@ -49,7 +49,7 @@ public abstract class Result<T> {
      *
      * @param <T> The result data type.
      */
-    public final static class Success<T> extends Result {
+    public final static class Success<T> extends Result<T> {
 
         /** The data resulting from the operation. */
         private T data;
