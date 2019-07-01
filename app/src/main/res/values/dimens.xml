@@ -27,4 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     <dimen name="font_user_display_name">24sp</dimen>
     <dimen name="font_user_user_name">16sp</dimen>
+
+    <dimen name="pp_size_large">56dp</dimen>
+    <dimen name="pp_size_small">32dp</dimen>
 </resources>
