@@ -24,9 +24,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     <color name="app_bar_icon_color">#FFFFFF</color>
 
-    <color name="text_regular_color">#F0000000</color>
+    <color name="text_regular_color">#E7FFFFFF</color>
     <color name="text_headline_color">@color/text_regular_color</color>
-    <color name="text_hint_color">#A0000000</color>
+    <color name="text_hint_color">#70FFFFFF</color>
 
-    <color name="separator_line_color">#10000000</color>
+    <color name="separator_line_color">#10FFFFFF</color>
 </resources>

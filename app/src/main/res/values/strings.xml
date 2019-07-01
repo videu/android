@@ -34,6 +34,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >=8 characters long</string>
     <string name="login_failed">Login failed</string>
+    <string name="sub_count">%s subscribers</string>
+    <string name="upload_date">Uploaded on %s</string>
 
     <string name="msg_loading">Loading …</string>
 
@@ -41,5 +43,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <string name="tab_text_overview">Overview</string>
     <string name="tab_text_videos">Videos</string>
     <string name="tab_text_details">Info</string>
+
+    <string name="profile_picture">Profile picture</string>
+
+    <string name="datetime_default_format">MM/dd/yyyy hh:mm a</string>
 
 </resources>

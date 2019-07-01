@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
+Default layout for the video player fragment.
+
 Copyright (c) 2019 Felix Kopp <sandtler@sandtler.club>
 
 This program is free software: you can redistribute it and/or modify
@@ -17,16 +19,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-<resources>
-    <color name="colorPrimary">#2196F3</color>
-    <color name="colorPrimaryDark">#0069C0</color>
-    <color name="colorAccent">#FF6D00</color>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame_video_player"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
 
-    <color name="app_bar_icon_color">#FFFFFF</color>
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <color name="text_regular_color">#F0000000</color>
-    <color name="text_headline_color">@color/text_regular_color</color>
-    <color name="text_hint_color">#A0000000</color>
-
-    <color name="separator_line_color">#10000000</color>
-</resources>
+</FrameLayout>

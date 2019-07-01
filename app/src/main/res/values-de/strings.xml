@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <resources>
+
     <string name="app_name">DEvid</string>
 
     <string name="title_activity_login">Anmelden</string>
@@ -29,6 +30,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <string name="invalid_username">Ungültiger Benutzername</string>
     <string name="invalid_password">Passwort muss >=8 Zeichen lang sein</string>
     <string name="login_failed">Login fehlgeschlagen</string>
+    <string name="sub_count">%s Abonnenten</string>
+    <string name="upload_date">Hochgeladen am %s</string>
 
     <string name="msg_loading">Laden …</string>
 
@@ -36,5 +39,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <string name="tab_text_overview">Übersicht</string>
     <string name="tab_text_videos">Videos</string>
     <string name="tab_text_details">Info</string>
+
+    <string name="profile_picture">Profilbild</string>
+
+    <string name="datetime_default_format">dd.MM.yyyy HH:mm</string>
+
 </resources>
 

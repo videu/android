@@ -19,32 +19,30 @@ package club.sandtler.devid.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.MediaController;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.List;
 
 import club.sandtler.devid.R;
-import club.sandtler.devid.lib.Constants;
+import club.sandtler.devid.ui.video.VideoDetailsFragment;
+import club.sandtler.devid.ui.video.VideoPlayerFragment;
 
 /**
  * Activity for playing videos.
  *
  * This activity needs to be passed the video id as an extra in the Intent
  * launching it, over the {@link #EXTRA_VIDEO_ID} key.
+ *
+ * TODO: Fix fullscreen (landscape layout) behavior
  */
 public class VideoPlayerActivity extends AppCompatActivity {
-
-    /** Bundle key for storing the video progress in seconds. */
-    private static final String BUNDLE_VIDEO_PROGRESS = "video_progress";
 
     /**
      * The extra name for supplying the video id
@@ -53,90 +51,49 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public static final String EXTRA_VIDEO_ID =
             "club.sandtler.devid.ui.VideoPlayerActivity.VIDEO_ID";
 
-    private MediaController mMediaController;
-    private VideoView mVideoView;
-
-    /** The current video playback position in milliseconds. */
-    private int mCurrentPosition = 0;
     /** The current video id. */
     private String mVideoId;
-
+    /** If true, the player is in fullscreen mode. */
     private boolean mIsFullscreen = false;
+
+    /** The fragment for the actual video player. */
+    private VideoPlayerFragment mVideoPlayerFragment;
+    /** The fragment for video details (Uploader, title, description etc). */
+    private VideoDetailsFragment mVideoDetailsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_video_player);
+
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            this.mIsFullscreen = true;
-        }
-
-        if (savedInstanceState != null) {
-            this.mCurrentPosition = savedInstanceState
-                    .getInt(VideoPlayerActivity.BUNDLE_VIDEO_PROGRESS);
+            mIsFullscreen = true;
         }
 
         handleIntent(getIntent());
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        this.initPlayer();
-        if (this.mVideoId != null) {
-            playVideo(this.mVideoId);
+        if (mVideoId != null) {
+            setupFragments(mVideoId);
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         // Can be received when the activity is paused (because the user
-        // is in another app, for example) and clicked on an app link.
+        // is in another app, for example) and an app link is clicked.
         super.onNewIntent(intent);
         handleIntent(intent);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        /*
-         * The video view might have already been destroyed in the
-         * onSaveInstanceState() callback, we will therefore need to
-         * save the video progress here.
-         */
-        this.mCurrentPosition = this.mVideoView.getCurrentPosition();
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            this.mVideoView.pause();
+        if (mVideoPlayerFragment == null && mVideoId != null) {
+            setupFragments(mVideoId);
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        this.mVideoView.stopPlayback();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle saveState) {
-        super.onSaveInstanceState(saveState);
-
-        saveState.putInt(
-                VideoPlayerActivity.BUNDLE_VIDEO_PROGRESS,
-                this.mCurrentPosition
-        );
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        if (!this.mIsFullscreen) {
+        if (!mIsFullscreen) {
             return;
         }
 
@@ -148,18 +105,19 @@ public class VideoPlayerActivity extends AppCompatActivity {
     }
 
     /**
-     * Play the specified video id.
+     * Initialize the activity's fragments.
      *
      * @param videoId The video id.
      */
-    public void playVideo(String videoId) {
-        String videoUri;
+    private void setupFragments(String videoId) {
+        mVideoPlayerFragment = VideoPlayerFragment.newInstance(videoId);
+        mVideoDetailsFragment = VideoDetailsFragment.newInstance(videoId);
 
-        videoUri = String.format(
-                Constants.CDN_ROOT + "/video/%s",
-                videoId
-        );
-        this.mVideoView.setVideoURI(Uri.parse(videoUri));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.video_player_fragment_container, mVideoPlayerFragment);
+        fragmentTransaction.add(R.id.video_details_fragment_container, mVideoDetailsFragment);
+        fragmentTransaction.commit();
     }
 
     /**
@@ -169,7 +127,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
      */
     private void handleIntent(Intent intent) {
         if (intent.hasExtra(VideoPlayerActivity.EXTRA_VIDEO_ID)) {
-            this.mVideoId = intent.getStringExtra(VideoPlayerActivity.EXTRA_VIDEO_ID);
+            mVideoId = intent.getStringExtra(VideoPlayerActivity.EXTRA_VIDEO_ID);
         } else {
             // Check if the activity has been launched by the user clicking
             // on a link to https://devid.sandtler.club/watch/<videoId>
@@ -179,44 +137,13 @@ public class VideoPlayerActivity extends AppCompatActivity {
             if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
                 List<String> segments = appLinkData.getPathSegments();
                 try {
-                    this.mVideoId = segments.get(1);
+                    mVideoId = segments.get(1);
                 } catch (IndexOutOfBoundsException e) {
-                    Toast.makeText(this, "Invalid video link", Toast.LENGTH_LONG)
-                            .show();
+                    Toast.makeText(this, "Invalid video link", Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
         }
-    }
-
-    /**
-     * Initialize the player by setting its MediaController
-     * and registering all required listeners.
-     */
-    private void initPlayer() {
-        this.mVideoView = findViewById(R.id.view_video_player);
-        this.mMediaController = new MediaController(this);
-        this.mMediaController.setMediaPlayer(this.mVideoView);
-        this.mVideoView.setMediaController(this.mMediaController);
-
-        this.mVideoView.setOnPreparedListener(
-                new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        final VideoView videoView = findViewById(R.id.view_video_player);
-
-                        // If the activity has been destroyed while playing,
-                        // set it back to where it was previously.
-                        if (mCurrentPosition <= 0) {
-                            mCurrentPosition = 1;
-                        }
-                        videoView.seekTo(mCurrentPosition);
-
-                        videoView.requestFocus();
-                        videoView.start();
-                    }
-                }
-        );
     }
 
     /**
