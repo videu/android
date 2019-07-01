@@ -61,6 +61,9 @@ public final class Constants {
          */
         public static final String USER_LOGIN = "/user/login";
 
+        /** Path to retrieve information on a particular video. */
+        public static final String VIDEO_INFO_BY_ID = "/video/info/%s";
+
         /**
          * CDN path to retrieve a raw video file in default quality.
          * Different qualities are to be supported in a later version.
