@@ -2,7 +2,6 @@
 
 <!--
 Fragment layout for a brief user / channel description.
-Can be embedded anywhere needed (especially in videos)
 
 Copyright (c) 2019 Felix Kopp <sandtler@sandtler.club>
 
@@ -45,7 +44,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             android:layout_width="@dimen/pp_size_small"
             android:layout_height="@dimen/pp_size_small"
             android:innerRadius="0dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="@dimen/pp_size_small_radius"
             app:cardElevation="0dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -72,10 +71,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             android:elevation="0dp"
             android:shadowColor="@android:color/transparent"
             android:textColor="@color/text_regular_color"
-            android:layout_marginLeft="@dimen/horizontal_margin_general"
+            android:layout_marginLeft="@dimen/horizontal_margin_medium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/user_brief_pp_container"
             app:layout_constraintBottom_toTopOf="@+id/user_brief_sub_count" />
+
+        <TextView
+            android:id="@+id/user_brief_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/horizontal_margin_small"
+            android:text="@string/msg_loading"
+            android:textSize="16sp"
+            android:textColor="@color/text_hint_color"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/user_brief_sub_count"
+            app:layout_constraintLeft_toRightOf="@+id/user_brief_display_name" />
 
         <TextView
             android:id="@+id/user_brief_sub_count"
@@ -86,7 +97,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             android:elevation="0dp"
             android:shadowColor="@android:color/transparent"
             android:textColor="@color/text_hint_color"
-            android:layout_marginLeft="@dimen/horizontal_margin_general"
+            android:layout_marginLeft="@dimen/horizontal_margin_medium"
             app:layout_constraintLeft_toRightOf="@+id/user_brief_pp_container"
             app:layout_constraintTop_toBottomOf="@+id/user_brief_display_name"
             app:layout_constraintBottom_toBottomOf="parent" />

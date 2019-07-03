@@ -49,6 +49,7 @@ public class UserBriefFragment extends Fragment {
     /** The view model. */
     private UserViewModel mViewModel;
 
+    private TextView mUserNameText;
     private TextView mDisplayNameText;
     private TextView mSubCountText;
     private ImageView mUserPP;
@@ -84,6 +85,7 @@ public class UserBriefFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_user_brief, container, false);
 
+        mUserNameText = root.findViewById(R.id.user_brief_user_name);
         mDisplayNameText = root.findViewById(R.id.user_brief_display_name);
         mSubCountText = root.findViewById(R.id.user_brief_sub_count);
         mUserPP = root.findViewById(R.id.user_brief_pp);
@@ -138,6 +140,11 @@ public class UserBriefFragment extends Fragment {
      * @param u The user.
      */
     private void updateUiWithUser(User u) {
+        String userAtName = String.format(
+                getResources().getString(R.string.user_name_at_prefix_tmpl),
+                u.getUserName()
+        );
+        mUserNameText.setText(userAtName);
         mDisplayNameText.setText(u.getDisplayName());
         // TODO: Add backend feature to transmit subscriber count
         mSubCountText.setText(String.format(getResources().getString(R.string.sub_count), 420));

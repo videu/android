@@ -46,6 +46,31 @@ public class VideoDataSource extends AbstractDataSource {
     }
 
     /**
+     * Post the user's own vote for a video.
+     *
+     * @param videoId The video id.
+     * @param vote The vote value.
+     * @return A result containing either the updated vote object, or an error.
+     */
+    @SuppressWarnings("unchecked")
+    public Result<Video> vote(String videoId, byte vote) {
+        try {
+            final JSONObject request = new JSONObject();
+            request.put("_id", videoId);
+            request.put("val", vote);
+
+            final JSONObject response = getNetworkUtil().post(URLPaths.VIDEO_POST_VOTE, request);
+            if (response == null) {
+                // TODO: Use an actual exception here
+                return new Result.Error(new NullPointerException());
+            }
+            return new Result.Success<>(Video.fromJSON(response));
+        } catch (Exception e) {
+            return new Result.Error(e);
+        }
+    }
+
+    /**
      * Retrieve and parse video meta data when we already know the path.
      *
      * @param path The path to use for the GET operation.

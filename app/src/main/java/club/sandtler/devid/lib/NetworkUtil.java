@@ -59,7 +59,7 @@ import club.sandtler.devid.BuildConfig;
 public final class NetworkUtil {
 
     /** The default instance. */
-    private static final NetworkUtil DEFAULT_INSTANCE = new NetworkUtil(null);
+    private static NetworkUtil sDefaultInstance = new NetworkUtil(null);
 
     /** The authentication token. */
     private final String mAuthToken;
@@ -71,7 +71,7 @@ public final class NetworkUtil {
      */
     @NonNull
     public static NetworkUtil getDefault() {
-        return DEFAULT_INSTANCE;
+        return sDefaultInstance;
     }
 
     /**

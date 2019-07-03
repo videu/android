@@ -17,6 +17,7 @@
 
 package club.sandtler.devid.ui.video;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
@@ -36,6 +37,8 @@ public class VideoViewModel extends ViewModel {
     private VideoRepository mRepository;
     /** The video view data exposed to the UI layer. */
     private MutableLiveData<Result<Video>> mVideo;
+
+    private VideoVoteTask mVoteTask;
 
     /**
      * Create a new view model.
@@ -61,18 +64,65 @@ public class VideoViewModel extends ViewModel {
         return mVideo;
     }
 
+    public LiveData<Result<Video>> vote(String videoId, byte vote) {
+        if (mVideo == null) {
+            mVideo = new MutableLiveData<>();
+        } else {
+            Result<Video> videoResult = mVideo.getValue();
+            if (videoResult instanceof Result.Success) {
+                // User has clicked the video
+                if (((Result.Success<Video>) videoResult).getData().getOwnRating() == vote) {
+                    vote = Video.RATING_NEUTRAL;
+                }
+            }
+        }
+
+        if (mVoteTask == null) {
+            mVoteTask = new VideoVoteTask();
+            mVoteTask.execute(videoId, vote);
+        }
+        return mVideo;
+    }
+
     /**
      * Async task to fetch video data from the repository.
      */
+    @SuppressLint("StaticFieldLeak")
     private class VideoRetrieveTask extends AsyncTask<String, Void, Result<Video>> {
 
         @Override
+        @SuppressWarnings("unchecked")
         public Result<Video> doInBackground(String... args) {
+            if (args.length < 1) {
+                return new Result.Error(new IllegalArgumentException());
+            }
+
             return mRepository.getById(args[0]);
         }
 
         @Override
         public void onPostExecute(Result<Video> result) {
+            mVideo.setValue(result);
+        }
+
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class VideoVoteTask extends AsyncTask<Object, Void, Result<Video>> {
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public Result<Video> doInBackground(Object... args) {
+            if (args.length < 2 || !(args[0] instanceof String) || !(args[1] instanceof Byte)) {
+                return new Result.Error(new IllegalArgumentException());
+            }
+
+            return mRepository.vote((String) args[0], (Byte) args[1]);
+        }
+
+        @Override
+        public void onPostExecute(Result<Video> result) {
+            mVoteTask = null;
             mVideo.setValue(result);
         }
 

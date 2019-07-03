@@ -26,7 +26,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     <color name="text_regular_color">#F0000000</color>
     <color name="text_headline_color">@color/text_regular_color</color>
-    <color name="text_hint_color">#A0000000</color>
+    <color name="text_hint_color">#88000000</color>
 
     <color name="separator_line_color">#10000000</color>
+
+    <color name="icon_tint_color">#60000000</color>
 </resources>

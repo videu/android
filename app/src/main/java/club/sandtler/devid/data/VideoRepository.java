@@ -60,4 +60,20 @@ public class VideoRepository {
         return result;
     }
 
+    /**
+     * Post the user's vote for a video.
+     *
+     * @param id The video id.
+     * @param vote The vote value.
+     * @return The updated video result.
+     */
+    public Result<Video> vote(String id, byte vote) {
+        Result<Video> result = mDataSource.vote(id, vote);
+        if (result instanceof Result.Success) {
+            mCache.put(id, ((Result.Success<Video>) result).getData());
+        }
+
+        return result;
+    }
+
 }

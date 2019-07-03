@@ -64,6 +64,9 @@ public final class Constants {
         /** Path to retrieve information on a particular video. */
         public static final String VIDEO_INFO_BY_ID = "/video/info/%s";
 
+        /** Path to POST the user's own vote value for a video. */
+        public static final String VIDEO_POST_VOTE = "/video/vote";
+
         /**
          * CDN path to retrieve a raw video file in default quality.
          * Different qualities are to be supported in a later version.

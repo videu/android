@@ -60,6 +60,7 @@ public class VideoDetailsFragment extends Fragment {
     private TextView mVideoDescriptionView;
     /** View root for the user brief fragment. */
     private UserBriefFragment mUserBriefFragment;
+    private VideoToolboxFragment mVideoToolboxFragment;
 
     /**
      * Create a new instance of this fragment.
@@ -130,29 +131,42 @@ public class VideoDetailsFragment extends Fragment {
      * Update the UI to show the video information after
      * the ViewModel's LiveData changed.
      *
-     * @param v The video.
+     * @param video The video.
      */
-    private void updateUiWithVideo(Video v) {
-        mVideoTitleView.setText(v.getTitle());
+    private void updateUiWithVideo(Video video) {
+        mVideoTitleView.setText(video.getTitle());
         SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
         mVideoUploadDateView.setText(String.format(
                 getResources().getString(R.string.upload_date),
-                sdf.format(v.getUploadDate())
+                sdf.format(video.getUploadDate())
         ));
-        setupUserBriefFragment(v.getUserId());
+        setupFragments(video);
     }
 
     /**
-     * Instantiate the user summary fragment.
+     * Instantiate all child fragments and add them to the layout.
      *
-     * @param userId The user id.
+     * @param video The video.
      */
-    private void setupUserBriefFragment(String userId) {
-        mUserBriefFragment = UserBriefFragment.newInstance(userId);
-
+    private void setupFragments(Video video) {
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.video_details_user_brief_fragment_container, mUserBriefFragment);
+
+//        if (mUserBriefFragment == null) {
+            mUserBriefFragment = UserBriefFragment.newInstance(video.getUserId());
+            fragmentTransaction.add(
+                    R.id.video_details_user_brief_fragment_container,
+                    mUserBriefFragment
+            );
+//        }
+//        if (mVideoToolboxFragment == null) {
+            mVideoToolboxFragment = VideoToolboxFragment.newInstance(video.getId());
+            fragmentTransaction.add(
+                    R.id.video_details_toolbox_fragment_container,
+                    mVideoToolboxFragment
+            );
+//        }
+
         fragmentTransaction.commit();
     }
 

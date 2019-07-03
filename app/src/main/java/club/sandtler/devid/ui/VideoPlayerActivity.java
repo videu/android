@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -51,15 +52,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public static final String EXTRA_VIDEO_ID =
             "club.sandtler.devid.ui.VideoPlayerActivity.VIDEO_ID";
 
-    /** The current video id. */
-    private String mVideoId;
     /** If true, the player is in fullscreen mode. */
     private boolean mIsFullscreen = false;
-
-    /** The fragment for the actual video player. */
-    private VideoPlayerFragment mVideoPlayerFragment;
-    /** The fragment for video details (Uploader, title, description etc). */
-    private VideoDetailsFragment mVideoDetailsFragment;
+    /** If true, the individual fragments have already been initialized. */
+    private boolean mFragmentsInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +69,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
         }
 
         handleIntent(getIntent());
-        if (mVideoId != null) {
-            setupFragments(mVideoId);
-        }
     }
 
     @Override
@@ -83,10 +76,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
         // Can be received when the activity is paused (because the user
         // is in another app, for example) and an app link is clicked.
         super.onNewIntent(intent);
+
         handleIntent(intent);
-        if (mVideoPlayerFragment == null && mVideoId != null) {
-            setupFragments(mVideoId);
-        }
     }
 
     @Override
@@ -106,17 +97,23 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     /**
      * Initialize the activity's fragments.
+     * Calling this multiple times will have no effect.
      *
      * @param videoId The video id.
      */
-    private void setupFragments(String videoId) {
-        mVideoPlayerFragment = VideoPlayerFragment.newInstance(videoId);
-        mVideoDetailsFragment = VideoDetailsFragment.newInstance(videoId);
+    private void setupFragments(@Nullable String videoId) {
+        if (videoId == null || mFragmentsInitialized) {
+            return;
+        }
+        mFragmentsInitialized = true;
+
+        VideoPlayerFragment playerFragment = VideoPlayerFragment.newInstance(videoId);
+        VideoDetailsFragment detailsFragment = VideoDetailsFragment.newInstance(videoId);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.video_player_fragment_container, mVideoPlayerFragment);
-        fragmentTransaction.add(R.id.video_details_fragment_container, mVideoDetailsFragment);
+        fragmentTransaction.add(R.id.video_player_fragment_container, playerFragment);
+        fragmentTransaction.add(R.id.video_details_fragment_container, detailsFragment);
         fragmentTransaction.commit();
     }
 
@@ -126,8 +123,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * @param intent The intent.
      */
     private void handleIntent(Intent intent) {
-        if (intent.hasExtra(VideoPlayerActivity.EXTRA_VIDEO_ID)) {
-            mVideoId = intent.getStringExtra(VideoPlayerActivity.EXTRA_VIDEO_ID);
+        String videoId = null;
+
+        if (intent.hasExtra(EXTRA_VIDEO_ID)) {
+            videoId = intent.getStringExtra(EXTRA_VIDEO_ID);
         } else {
             // Check if the activity has been launched by the user clicking
             // on a link to https://devid.sandtler.club/watch/<videoId>
@@ -137,13 +136,15 @@ public class VideoPlayerActivity extends AppCompatActivity {
             if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
                 List<String> segments = appLinkData.getPathSegments();
                 try {
-                    mVideoId = segments.get(1);
+                    videoId = segments.get(1);
                 } catch (IndexOutOfBoundsException e) {
                     Toast.makeText(this, "Invalid video link", Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
         }
+
+        setupFragments(videoId);
     }
 
     /**
@@ -151,8 +152,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * This should only be called when the orientation is landscape.
      */
     private void hideSystemUI() {
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
+        getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -166,8 +166,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * i.e. when the status bar is being pulled down.
      */
     private void showSystemUI() {
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
+        getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN

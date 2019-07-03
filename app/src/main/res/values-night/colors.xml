@@ -29,4 +29,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <color name="text_hint_color">#70FFFFFF</color>
 
     <color name="separator_line_color">#10FFFFFF</color>
+
+    <color name="icon_tint_color">#70FFFFFF</color>
 </resources>
