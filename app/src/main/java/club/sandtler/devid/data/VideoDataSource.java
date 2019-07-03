@@ -35,6 +35,7 @@ public class VideoDataSource extends AbstractDataSource {
      * @param videoId The video id.
      * @return The video meta, or an error object it they could not be fetched.
      */
+    @SuppressWarnings("unchecked")
     public Result<Video> getById(@NonNull String videoId) {
         if (!isIdValid(videoId)) {
             return new Result.Error(new IllegalArgumentException("Invalid video id format"));
@@ -50,6 +51,7 @@ public class VideoDataSource extends AbstractDataSource {
      * @param path The path to use for the GET operation.
      * @return The result of the fetch operation.
      */
+    @SuppressWarnings("unchecked")
     private Result<Video> retrieveByPath(String path) {
         try {
             final JSONObject videoData = getNetworkUtil().get(path);

@@ -38,6 +38,7 @@ public class LoginDataSource extends AbstractDataSource {
      * @param password The password.
      * @return The logged in user, or an error object it the login failed.
      */
+    @SuppressWarnings("unchecked")
     public Result<LoggedInUser> login(String userName, String password) {
         try {
             final JSONObject request = credsToJSON(userName, password);

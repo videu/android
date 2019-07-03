@@ -29,22 +29,32 @@ import java.util.Date;
  */
 public class Video {
 
-    /** Rating key for like. */
+    /** VideoEntity key for like. */
     public static final byte RATING_LIKE = 1;
-    /** Rating key for dislike. */
+    /** VideoEntity key for dislike. */
     public static final byte RATING_DISLIKE = -1;
     /** Key for no own rating. */
     public static final byte RATING_NEUTRAL = 0;
 
+    /** JSON object key for the video id. */
     public static final String KEY_VIDEO_ID = "_id";
+    /** JSON object key for the user id. */
     public static final String KEY_USER_ID = "user_id";
+    /** JSON object key for the video title. */
     public static final String KEY_TITLE = "title";
+    /** JSON object key for the video description. */
     public static final String KEY_DESCRIPTION = "description";
+    /** JSON object key for the video upload date. */
     public static final String KEY_UPLOAD_DATE = "time";
+    /** JSON object key for the video duration in milliseconds. */
     public static final String KEY_DURATION = "duration";
+    /** JSON object key for the object containig the video rating info. */
     public static final String KEY_RATING_OBJ = "rating";
+    /** JSON obejct key for the amount of likes. */
     public static final String KEY_RATING_LIKES = "likes";
+    /** JSON object key for the amount of dislikes. */
     public static final String KEY_RATING_DISLIKES = "dislikes";
+    /** JSON object key for the own video rating. */
     public static final String KEY_OWN_RATING = "own";
 
     /** The video id. */

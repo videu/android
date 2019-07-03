@@ -41,6 +41,7 @@ public class UserDataSource extends AbstractDataSource {
      * @param userId The user id.
      * @return The user, or an error object it the user could not be fetched.
      */
+    @SuppressWarnings("unchecked")
     public Result<User> getById(@NonNull String userId) {
         if (!isIdValid(userId)) {
             return new Result.Error(new IllegalArgumentException("Invalid user id format"));
@@ -56,6 +57,7 @@ public class UserDataSource extends AbstractDataSource {
      * @param userName The user name.
      * @return The user, or an error object it the user could not be fetched.
      */
+    @SuppressWarnings("unchecked")
     public Result<User> getByUserName(@NonNull String userName) {
         if (!isUserNameValid(userName)) {
             return new Result.Error(new IllegalArgumentException("Invalid username"));
@@ -71,6 +73,7 @@ public class UserDataSource extends AbstractDataSource {
      * @param userId The user id.
      * @return The user's profile picture.
      */
+    @SuppressWarnings("unchecked")
     public Result<Bitmap> getPP(@NonNull String userId) {
         if (!isIdValid(userId)) {
             return new Result.Error(new IllegalArgumentException("Invalid user id format"));
@@ -93,6 +96,7 @@ public class UserDataSource extends AbstractDataSource {
      * @param path The path to use for the GET operation.
      * @return The result of the fetch operation.
      */
+    @SuppressWarnings("unchecked")
     private Result<User> retrieveByPath(String path) {
         try {
             final JSONObject userData = getNetworkUtil().get(path);

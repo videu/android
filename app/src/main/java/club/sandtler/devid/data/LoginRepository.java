@@ -77,7 +77,7 @@ public class LoginRepository {
      *
      * @param userName The user name.
      * @param password The password.
-     * @return Either the ressult with the {@link LoggedInUser} instance,
+     * @return Either the result with the {@link LoggedInUser} instance,
      *         or an error containing the exception that occurred.
      */
     public Result<LoggedInUser> login(String userName, String password) {
@@ -92,7 +92,7 @@ public class LoginRepository {
         Result<LoggedInUser> result = mDataSource.login(userName, password);
         if (result instanceof Result.Success) {
             mUser = ((Result.Success<LoggedInUser>) result).getData();
-        } else if (result instanceof Result.Error){
+        } else if (result instanceof Result.Error) {
             ((Result.Error) result).getError().printStackTrace();
         }
 
