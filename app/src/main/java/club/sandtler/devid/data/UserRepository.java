@@ -31,7 +31,7 @@ import club.sandtler.devid.lib.Constants;
  * {@link UserDataSource} and maintains an in-memory cache of them
  * to save some bandwidth (and prevent a DDoS against my server).
  */
-public class UserRepository {
+public class UserRepository extends AbstractRepository {
 
     /** The instance (singleton access). */
     private static volatile UserRepository sInstance;
@@ -66,6 +66,13 @@ public class UserRepository {
         }
 
         return sInstance;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void clearMemCache() {
+        mCacheById.clear();
+        mCacheByUserName.clear();
     }
 
     /**

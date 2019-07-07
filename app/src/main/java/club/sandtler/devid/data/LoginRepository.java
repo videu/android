@@ -20,11 +20,11 @@ package club.sandtler.devid.data;
 import club.sandtler.devid.data.model.LoggedInUser;
 
 /**
- * Class that requests authentication and mUser information from
+ * Class that requests authentication and user information from
  * the backend server and maintains an in-memory cache of
  * login status and user credentials information.
  */
-public class LoginRepository {
+public class LoginRepository extends AbstractRepository {
 
     /** The instance (singleton access). */
     private static volatile LoginRepository sInstance;
@@ -37,7 +37,7 @@ public class LoginRepository {
 
     // private constructor : singleton access
     private LoginRepository(LoginDataSource dataSource) {
-        this.mDataSource = dataSource;
+        mDataSource = dataSource;
     }
 
     /**
@@ -47,11 +47,18 @@ public class LoginRepository {
      * @return The instance.
      */
     public static LoginRepository getInstance(LoginDataSource dataSource) {
-        if (LoginRepository.sInstance == null) {
-            LoginRepository.sInstance = new LoginRepository(dataSource);
+        if (sInstance == null) {
+            sInstance = new LoginRepository(dataSource);
         }
 
-        return LoginRepository.sInstance;
+        return sInstance;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void clearMemCache() {
+        super.clearMemCache();
+        logout();
     }
 
     /**

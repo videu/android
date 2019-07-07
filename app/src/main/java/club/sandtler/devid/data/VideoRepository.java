@@ -9,7 +9,7 @@ import club.sandtler.devid.lib.Constants;
  * Class that requests video meta data from the backend server over the
  * {@link VideoDataSource} and maintains an in-memory cache of them.
  */
-public class VideoRepository {
+public class VideoRepository extends AbstractRepository {
 
     /** The instance (singleton access). */
     private static volatile VideoRepository sInstance;
