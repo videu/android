@@ -105,32 +105,22 @@ public class UserBriefFragment extends Fragment {
     private void handleFragmentArgs(@NonNull Bundle args) {
         String userId = args.getString(KEY_USER_ID);
 
-        mViewModel.getById(userId).observe(this, new Observer<Result<User>>() {
-
-            @Override
-            public void onChanged(Result<User> userResult) {
-                if (userResult instanceof Result.Success) {
-                    updateUiWithUser(((Result.Success<User>) userResult).getData());
-                } else if (userResult instanceof Result.Error) {
-                    // TODO: Handle errors properly
-                    ((Result.Error) userResult).getError().printStackTrace();
-                }
+        mViewModel.getById(userId).observe(this, userResult -> {
+            if (userResult instanceof Result.Success) {
+                updateUiWithUser(((Result.Success<User>) userResult).getData());
+            } else if (userResult instanceof Result.Error) {
+                // TODO: Handle errors properly
+                ((Result.Error) userResult).getError().printStackTrace();
             }
-
         });
 
-        mViewModel.getPP(userId).observe(this, new Observer<Result<Bitmap>>() {
-
-            @Override
-            public void onChanged(Result<Bitmap> bitmapResult) {
-                if (bitmapResult instanceof Result.Success) {
-                    updatePP(((Result.Success<Bitmap>) bitmapResult).getData());
-                } else if (bitmapResult instanceof Result.Error) {
-                    // TODO: Handle errors properly
-                    ((Result.Error) bitmapResult).getError().printStackTrace();
-                }
+        mViewModel.getPP(userId).observe(this, bitmapResult -> {
+            if (bitmapResult instanceof Result.Success) {
+                updatePP(((Result.Success<Bitmap>) bitmapResult).getData());
+            } else if (bitmapResult instanceof Result.Error) {
+                // TODO: Handle errors properly
+                ((Result.Error) bitmapResult).getError().printStackTrace();
             }
-
         });
     }
 

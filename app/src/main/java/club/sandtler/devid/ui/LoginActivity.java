@@ -119,20 +119,13 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         mUserNameEditText.addTextChangedListener(afterTextChangedListener);
         mPasswordEditText.addTextChangedListener(afterTextChangedListener);
 
-        mPasswordEditText.setOnEditorActionListener(
-                new TextView.OnEditorActionListener() {
+        mPasswordEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                handleLogin(mLoginButton);
+            }
 
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            handleLogin(mLoginButton);
-                        }
-
-                        return false;
-                    }
-
-                }
-        );
+            return false;
+        });
     }
 
     /**

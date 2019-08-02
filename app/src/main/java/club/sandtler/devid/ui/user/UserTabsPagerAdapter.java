@@ -76,7 +76,7 @@ public class UserTabsPagerAdapter extends FragmentPagerAdapter {
                 return new UserDetailsFragment();
         }
 
-        return null;
+        return UserOverviewFragment.newInstance(this.mUserSpec);
     }
 
     @Nullable

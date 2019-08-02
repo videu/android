@@ -113,17 +113,12 @@ public class VideoDetailsFragment extends Fragment {
     private void handleFragmentArgs(@NonNull Bundle args) {
         mVideoId = args.getString(KEY_VIDEO_ID);
 
-        mViewModel.getVideo(mVideoId).observe(this, new Observer<Result<Video>>() {
-
-            @Override
-            public void onChanged(Result<Video> videoResult) {
-                if (videoResult instanceof Result.Success) {
-                    updateUiWithVideo(((Result.Success<Video>) videoResult).getData());
-                } else if (videoResult instanceof Result.Error) {
-                    ((Result.Error) videoResult).getError().printStackTrace();
-                }
+        mViewModel.getVideo(mVideoId).observe(this, videoResult -> {
+            if (videoResult instanceof Result.Success) {
+                updateUiWithVideo(((Result.Success<Video>) videoResult).getData());
+            } else if (videoResult instanceof Result.Error) {
+                ((Result.Error) videoResult).getError().printStackTrace();
             }
-
         });
     }
 
