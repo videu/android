@@ -43,5 +43,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <dimen name="pp_size_small">40dp</dimen>
     <dimen name="pp_size_small_radius">20dp</dimen>
 
+    <dimen name="video_thumbnail_height">56dp</dimen>
+
     <dimen name="separator_line_height">1dp</dimen>
 </resources>

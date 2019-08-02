@@ -39,6 +39,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     <string name="msg_loading">Loading …</string>
 
+    <string name="action_share">Share</string>
+
     <string name="title_activity_user_view">User</string>
     <string name="tab_text_overview">Overview</string>
     <string name="tab_text_videos">Videos</string>

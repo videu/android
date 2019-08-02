@@ -30,14 +30,19 @@ public final class Constants {
     /** The auth token type for Android's AccountManager Framework. */
     public static final String AUTH_TOKEN_TYPE = "club.sandter.devid";
 
+    /** The tag to user for logging. */
+    public static final String LOG_TAG = "DEvid";
+
+    /** Template full URL for constructing a video share link. */
+    public static final String VIDEO_SHARE_URL_TMPL = "https://devid.sandtler.club/watch/%s";
+
     /**
      * Absolute URL paths for backend operations and CDN sources.
-     *
+     * <p>
      * All paths in here need to be formatted with Java's
-     * <code>String.format()</code> API.
-     *
-     * Paths prefixed with <code>CDN_</code> are to be directed to the CDN,
-     * all other ones to the backend API server.
+     * {@code String.format()} API.  Paths prefixed with {@code CDN_} are
+     * to be prefixed with {@link URLPaths#CDN_ROOT}, all other ones with
+     * {@link URLPaths#BACKEND_ROOT}.
      */
     public static final class URLPaths {
 
@@ -85,7 +90,7 @@ public final class Constants {
 
     }
 
-    /** Sizes for both in-memory, database and storage cache. */
+    /** Sizes for in-memory, database and storage cache. */
     public static final class CacheSize {
 
         /** The maximum amount of entries in the in-memory user cache. */
@@ -107,7 +112,7 @@ public final class Constants {
     @Deprecated public static final String BACKEND_ROOT = URLPaths.BACKEND_ROOT;
 
     /**
-     * AThe root URL for all CDN requests (videos/profile pictures etc).
+     * The root URL for all CDN requests (videos/profile pictures etc).
      *
      * @deprecated Use {@link Constants.URLPaths#CDN_ROOT} instead.
      */

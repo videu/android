@@ -37,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = this.getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_item_about:
                 Toast.makeText(
-                        this.getApplicationContext(),
+                        getApplicationContext(),
                         "About",
                         Toast.LENGTH_SHORT
                 ).show();
@@ -61,10 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.menu_item_settings:
                 Toast.makeText(
-                        this.getApplicationContext(),
+                        getApplicationContext(),
                         "Settings",
                         Toast.LENGTH_SHORT
                 ).show();
+                break;
+
+            case R.id.menu_item_my_account:
+                openUserView();
                 break;
 
             default:
@@ -73,12 +77,18 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private void openUserView() {
+        Intent intent = new Intent(this, UserViewActivity.class);
+        intent.putExtra(UserViewActivity.EXTRA_USER_NAME, "sandtler");
+        startActivity(intent);
+    }
+
     public void playVideo(View v) {
         Intent intent;
 
         intent = new Intent(this, VideoPlayerActivity.class);
-        intent.putExtra(VideoPlayerActivity.EXTRA_VIDEO_ID, "The_Interview");
-        this.startActivity(intent);
+        intent.putExtra(VideoPlayerActivity.EXTRA_VIDEO_ID, "5d1d2339e710560cdf5c5b80");
+        startActivity(intent);
     }
 
 }
