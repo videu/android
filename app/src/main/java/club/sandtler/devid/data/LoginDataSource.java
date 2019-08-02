@@ -20,9 +20,10 @@ package club.sandtler.devid.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.security.auth.login.LoginException;
+
 import club.sandtler.devid.data.model.LoggedInUser;
 import club.sandtler.devid.lib.Constants;
-import club.sandtler.devid.lib.NetworkUtil;
 
 /**
  * Class that handles authentication w/ login credentials
@@ -46,7 +47,7 @@ public class LoginDataSource extends AbstractDataSource {
                     .post(Constants.URLPaths.USER_LOGIN, request);
 
             if (response.has("err")) {
-                return new Result.Error(new Exception(response.getString("err")));
+                return new Result.Error(new LoginException(response.getString("err")));
             }
 
             return new Result.Success<>(LoggedInUser.fromJSON(response));

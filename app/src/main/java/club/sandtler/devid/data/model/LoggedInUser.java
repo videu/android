@@ -30,7 +30,8 @@ import java.util.Date;
  * Data class that captures user information for logged in users
  * retrieved from {@link club.sandtler.devid.data.LoginRepository}.
  */
-public class LoggedInUser extends User {
+@SuppressWarnings("WeakerAccess")
+public final class LoggedInUser extends User {
 
     /** JSON object key for the authentication token. */
     public static final String KEY_AUTH_TOKEN = "token";
@@ -62,6 +63,11 @@ public class LoggedInUser extends User {
         mEmail = email;
     }
 
+    /**
+     * Recreate a new LoggedInUser from a Bundle.
+     *
+     * @param bundle The bundle containing all data.
+     */
     public LoggedInUser(Bundle bundle) {
         super(
                 bundle.getString(LoggedInUser.KEY_ID),

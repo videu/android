@@ -30,6 +30,27 @@ import club.sandtler.devid.lib.Constants;
 public abstract class AbstractRepository {
 
     /**
+     * Return the repository instance.
+     *
+     * @param <T> The repository type.
+     * @return The repository instance.
+     */
+    public static <T extends AbstractRepository> T getInstance() {
+        throw new UnsupportedOperationException("Unimplemented getter");
+    }
+
+    /**
+     * Return the repository instance and update the authentication token.
+     *
+     * @param authToken The authentication token.
+     * @param <T> The repository type.
+     * @return The repository instance.
+     */
+    public static <T extends AbstractRepository> T getInstance(String authToken) {
+        return getInstance();
+    }
+
+    /**
      * Clear the in-memory data cache.
      *
      * This method should only be called if the system is low on memory

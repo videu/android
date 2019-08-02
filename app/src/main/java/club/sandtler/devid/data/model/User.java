@@ -25,6 +25,7 @@ import java.util.Date;
 /**
  * Data store class for any user.
  */
+@SuppressWarnings("WeakerAccess")
 public class User {
 
     /** JSON object key for the user id. */

@@ -27,6 +27,7 @@ import java.util.Date;
 /**
  * Data class that stores all meta data about a video.
  */
+@SuppressWarnings("WeakerAccess")
 public class Video {
 
     /** VideoEntity key for like. */
@@ -48,7 +49,7 @@ public class Video {
     public static final String KEY_UPLOAD_DATE = "time";
     /** JSON object key for the video duration in milliseconds. */
     public static final String KEY_DURATION = "duration";
-    /** JSON object key for the object containig the video rating info. */
+    /** JSON object key for the object containing the video rating info. */
     public static final String KEY_RATING_OBJ = "rating";
     /** JSON obejct key for the amount of likes. */
     public static final String KEY_RATING_LIKES = "likes";
@@ -83,47 +84,43 @@ public class Video {
      * @param userId The user id who uploaded the video.
      * @param title The video title.
      * @param description The video description.
-     * @param uploadedDate The upload date.
-     * @param duration The duration in seconds.
-     * @param likes The amount of likes this video got so far.
-     * @param dislikes The amount of dislikes this video got so far.
-     */
-    public Video(final String id, final String userId, String title, String description,
-                 Date uploadedDate, long duration, long likes, long dislikes) {
-        mId = id;
-        mUserId = userId;
-        mTitle = title;
-        mDescription = description;
-        mUploadDate = uploadedDate;
-        mDuration = duration;
-        mLikes = likes;
-        mDislikes = dislikes;
-        mOwnRating = Video.RATING_NEUTRAL;
-    }
-
-    /**
-     * Create a new Video.
-     *
-     * @param id The video id.
-     * @param title The video title.
-     * @param description The video description.
-     * @param uploadedDate The upload date.
+     * @param uploadDate The upload date.
      * @param duration The duration in seconds.
      * @param likes The amount of likes this video got so far.
      * @param dislikes The amount of dislikes this video got so far.
      * @param ownRating The user's own rating.
      */
     public Video(final String id, final String userId, String title, String description,
-                 Date uploadedDate, long duration, long likes, long dislikes, byte ownRating) {
+                 Date uploadDate, long duration, long likes, long dislikes, byte ownRating) {
         mId = id;
         mUserId = userId;
         mTitle = title;
         mDescription = description;
-        mUploadDate = uploadedDate;
+        mUploadDate = uploadDate;
         mDuration = duration;
         mLikes = likes;
         mDislikes = dislikes;
         mOwnRating = ownRating;
+    }
+
+    /**
+     * Create a new Video.
+     *
+     * @param id The video id.
+     * @param userId The user id who uploaded the video.
+     * @param title The video title.
+     * @param description The video description.
+     * @param uploadDate The upload date.
+     * @param duration The duration in seconds.
+     * @param likes The amount of likes this video got so far.
+     * @param dislikes The amount of dislikes this video got so far.
+     */
+    public Video(final String id, final String userId, String title, String description,
+                 Date uploadDate, long duration, long likes, long dislikes) {
+        this(
+                id, userId, title, description, uploadDate, duration,
+                likes, dislikes, Video.RATING_NEUTRAL
+        );
     }
 
     /**
