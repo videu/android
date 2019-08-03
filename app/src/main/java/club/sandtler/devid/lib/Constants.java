@@ -47,12 +47,10 @@ public final class Constants {
     public static final class URLPaths {
 
         /** The root URL for all backend requests. */
-        public static final String BACKEND_ROOT = BuildConfig.DEBUG
-                ? "https://devid.deg.vnet"
-                : "https://backend.devid.sandtler.club";
+        public static final String BACKEND_ROOT = BuildConfig.BACKEND_ROOT;
 
         /** The root URL for all CDN requests (videos/profile pictures etc). */
-        public static final String CDN_ROOT = "https://cdn.devid.sandtler.club";
+        public static final String CDN_ROOT = BuildConfig.CDN_ROOT;
 
         /** Path to retrieve user data by the user's id. */
         public static final String USER_BY_ID = "/user/byId/%s";

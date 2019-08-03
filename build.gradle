@@ -22,6 +22,25 @@ allprojects {
     }
 }
 
+subprojects {
+    // Load common build config constants
+    def buildConfig = new Properties()
+    buildConfig.load(new FileInputStream("$project.rootDir/build-config.default.properties"))
+    buildConfig.each {
+        prop -> project.ext.set(prop.key, prop.value)
+    }
+    if (file("$project.rootDir/build-config.properties").exists()) {
+        file("$project.rootDir/build-config.properties").withInputStream {
+            buildConfig.load(it)
+        }
+        buildConfig.each {
+            prop -> project.ext.set(prop.key, prop.value)
+        }
+    } else {
+        println 'File \'build-config.properties\' does not exist, continuing with default values'
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

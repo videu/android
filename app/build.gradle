@@ -13,11 +13,22 @@ android {
         versionCode 1
         versionName "0.1.0-alpha1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // Values from build-config.properties and build-config.default.properties
+        buildConfigField 'String', 'BACKEND_ROOT', BACKEND_ROOT
+        buildConfigField 'String', 'CDN_ROOT', CDN_ROOT
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            applicationIdSuffix '.debug'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // This prevents accidental changes to the production config, do not remove
+            buildConfigField 'String', 'BACKEND_ROOT', 'https://backend.devid.sandtler.club'
+            buildConfigField 'String', 'CDN_ROOT', 'https://cdn.devid.sandtler.club'
         }
     }
     buildToolsVersion = '29.0.1'
