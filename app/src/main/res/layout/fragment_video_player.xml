@@ -24,11 +24,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     android:id="@+id/frame_video_player"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     android:keepScreenOn="true">
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/player_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/player_view_loading_bar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center" />
 
 </FrameLayout>

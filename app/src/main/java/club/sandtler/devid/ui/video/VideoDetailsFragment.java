@@ -17,7 +17,6 @@
 
 package club.sandtler.devid.ui.video;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +27,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.text.SimpleDateFormat;
@@ -147,20 +145,16 @@ public class VideoDetailsFragment extends Fragment {
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-//        if (mUserBriefFragment == null) {
-            mUserBriefFragment = UserBriefFragment.newInstance(video.getUserId());
-            fragmentTransaction.add(
-                    R.id.video_details_user_brief_fragment_container,
-                    mUserBriefFragment
-            );
-//        }
-//        if (mVideoToolboxFragment == null) {
-            mVideoToolboxFragment = VideoToolboxFragment.newInstance(video.getId());
-            fragmentTransaction.add(
-                    R.id.video_details_toolbox_fragment_container,
-                    mVideoToolboxFragment
-            );
-//        }
+        mUserBriefFragment = UserBriefFragment.newInstance(video.getUserId());
+        fragmentTransaction.add(
+                R.id.video_details_user_brief_fragment_container,
+                mUserBriefFragment
+        );
+        mVideoToolboxFragment = VideoToolboxFragment.newInstance(video.getId());
+        fragmentTransaction.add(
+                R.id.video_details_toolbox_fragment_container,
+                mVideoToolboxFragment
+        );
 
         fragmentTransaction.commit();
     }
