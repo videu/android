@@ -27,8 +27,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             // This prevents accidental changes to the production config, do not remove
-            buildConfigField 'String', 'BACKEND_ROOT', 'https://backend.devid.sandtler.club'
-            buildConfigField 'String', 'CDN_ROOT', 'https://cdn.devid.sandtler.club'
+            buildConfigField 'String', 'BACKEND_ROOT', '"https://backend.devid.sandtler.club"'
+            buildConfigField 'String', 'CDN_ROOT', '"https://cdn.devid.sandtler.club"'
         }
     }
     buildToolsVersion = '29.0.1'
