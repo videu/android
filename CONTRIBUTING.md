@@ -5,19 +5,44 @@ DEvid project.  You’re awesome!
 
 ## Environment Setup
 
-Before doing anything, please follow the setup guide found
-[here](https://git.sandtler.club/sandtler/devid/blob/master/doc/dev-setup.md).
-This will walk you through setting up the backend server used by the app.
-When you have everything ready, start the server to make sure everything is
-working properly.
+This guide has moved to `doc/dev-setup.md`.
 
-You will need a recent version of Android Studio, along with the latest SDK
-(Gradle will make you install all dependencies automatically anyways).
-When Gradle has finished making your entire PC freeze for 5 minutes straight,
-you need to change the backend URL in
-`club.sandtler.devid.lib.Constants.URLPaths#BACKEND_ROOT`.
+## Code Style
 
-Also note that Android requires you to use HTTPS rather than plain HTTP, meaning
-you will probably want to set up nginx or something comparable as a reverse
-proxy to the backend.  You won't need to worry about certificates because debug
-builds have SSL checks disabled by default.
+These guidelines build upon the
+[AOSP Java Code Styleguide](https://source.android.com/setup/contribute/code-style),
+so please read that first.  Your default Android Studio installation will have
+most code style-related settings right anyways, so don't worry.
+
+The general line length limit is, as you should know now, 100 characters.
+If a method has a parameter list too long to fit on one line, just break the
+parameters up and align them to the opening parenthesis.  When calling another
+method and the parameter list does not fit on one line, write every parameter
+on a separate one and indent them with 8 spaces.  Furthermore, please leave a
+blank line between class heads and the actual class content.  Here's a good
+example code snippet that demonstrates what I just wrote:
+
+```java
+public class Foo {
+                    // < Blank line between class head and methods
+    public int makeThatStackMemoryFull(int parameterOne, int parameterTwo, int theThirdParameter,
+                                       double anotherParameter, boolean theLastOne) {
+        // Parameters aligned properly ^
+        
+        return makeThatStackMemoryFull(
+                parameterOne, // < Parameters that wouldn't fit on one line are
+                parameterTwo, //   split and double-indented (8 spaces)
+                theThirdParameter,
+                anotherParameter,
+                theLastOne
+        ); // < The closing parenthesis takes one line on its own
+    }
+                    // < Another blank line before closing the class body
+}
+```
+
+## Commit Messages
+
+Commit messages should be brief but descriptive, you know the drill.  Also, try
+to avoid curse words if they're not necessary (even though it is fine to
+immortalize your frustration in the commit message sometimes :D).
